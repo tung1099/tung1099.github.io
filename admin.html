@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Quản trị — gnutblog</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230d9488'/><text x='16' y='23' font-size='19' font-family='monospace' font-weight='bold' fill='white' text-anchor='middle'>g</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" defer></script>
+<style>
+:root{
+  --bg:#ffffff; --surface:#f6f8fa; --surface2:#eef1f4; --text:#1f2328; --muted:#656d76;
+  --line:#d8dee4; --accent:#0d9488; --accent-bg:#e6fffa; --code-bg:#f6f8fa;
+  --danger:#cf222e; --danger-bg:#ffebe9; --ok:#1a7f37;
+  --c-key:#cf222e; --c-str:#0a3069; --c-com:#6e7781; --c-num:#0550ae;
+  --c-fn:#8250df; --c-type:#953800; --c-attr:#0550ae;
+}
+html[data-theme="dark"]{
+  --bg:#0d1117; --surface:#161b22; --surface2:#1c2230; --text:#e6edf3; --muted:#8b949e;
+  --line:#262d36; --accent:#2dd4bf; --accent-bg:#0d2b28; --code-bg:#161b22;
+  --danger:#f85149; --danger-bg:#2d1416; --ok:#3fb950;
+  --c-key:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff;
+  --c-fn:#d2a8ff; --c-type:#ffa657; --c-attr:#79c0ff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+a{color:var(--accent)}
+input,select,textarea,button{font-family:inherit}
+
+/* ---------- khung chung ---------- */
+.topbar{
+  border-bottom:1px solid var(--line);background:var(--surface);
+  position:sticky;top:0;z-index:50;
+}
+.topbar .in{max-width:1180px;margin:0 auto;padding:0 20px;height:56px;display:flex;align-items:center;gap:12px}
+.logo{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:15px;letter-spacing:-.03em}
+.logo .b{color:var(--accent)}
+.badge{
+  font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--accent);
+  background:var(--accent-bg);padding:3px 9px;border-radius:20px;font-weight:600;
+}
+.spacer{margin-left:auto}
+.who{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.who img{width:24px;height:24px;border-radius:50%;border:1px solid var(--line)}
+main{max-width:1180px;margin:0 auto;padding:30px 20px 90px}
+
+/* ---------- nút ---------- */
+.btn{
+  border:1px solid var(--line);background:var(--surface);color:var(--text);
+  padding:8px 15px;border-radius:8px;font-size:13.5px;font-weight:550;cursor:pointer;transition:.15s;
+}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.pri:hover{opacity:.88;color:#fff}
+.btn.dan{color:var(--danger);border-color:transparent;background:none}
+.btn.dan:hover{background:var(--danger-bg);border-color:var(--danger)}
+.btn.sm{padding:5px 11px;font-size:12.5px}
+
+/* ---------- form ---------- */
+label{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-bottom:6px;letter-spacing:.01em}
+.f{margin-bottom:16px}
+.inp{
+  width:100%;padding:9px 13px;font-size:14px;border:1px solid var(--line);
+  border-radius:8px;background:var(--bg);color:var(--text);outline:none;transition:.15s;
+}
+.inp:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg)}
+.hint{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.55}
+.row{display:grid;gap:14px}
+.row.c2{grid-template-columns:1fr 1fr}
+.row.c3{grid-template-columns:1fr 1fr 1fr}
+
+/* ---------- màn đăng nhập ---------- */
+.login{max-width:470px;margin:52px auto}
+.card{border:1px solid var(--line);border-radius:14px;padding:28px;background:var(--surface)}
+.login h1{font-size:22px;font-weight:750;letter-spacing:-.02em;margin-bottom:6px}
+.login .sub{color:var(--muted);font-size:14px;margin-bottom:24px}
+.note{
+  border:1px solid var(--line);border-left:3px solid var(--accent);background:var(--bg);
+  padding:13px 15px;border-radius:0 9px 9px 0;font-size:12.8px;color:var(--muted);line-height:1.6;margin-top:18px;
+}
+.note b{color:var(--text)}
+.err{
+  background:var(--danger-bg);border:1px solid var(--danger);color:var(--danger);
+  padding:11px 14px;border-radius:8px;font-size:13.2px;margin-bottom:16px;line-height:1.55;
+}
+.chk{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:var(--muted);cursor:pointer;margin-bottom:18px}
+.chk input{margin-top:3px;accent-color:var(--accent);width:15px;height:15px}
+
+/* ---------- danh sách bài ---------- */
+.head{display:flex;align-items:center;gap:12px;margin-bottom:22px;flex-wrap:wrap}
+.head h1{font-size:23px;font-weight:750;letter-spacing:-.02em;margin-right:auto}
+.tbl{border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.tr{
+  display:grid;grid-template-columns:1fr 108px 96px 150px;gap:12px;align-items:center;
+  padding:13px 16px;border-bottom:1px solid var(--line);transition:.12s;
+}
+.tr:last-child{border-bottom:none}
+.tr:hover{background:var(--surface)}
+.tr.h{background:var(--surface);font-size:11.5px;font-weight:650;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.tr .ti{font-weight:600;font-size:14.5px;line-height:1.4}
+.tr .sl{font-family:"JetBrains Mono",monospace;font-size:11.5px;color:var(--muted);margin-top:3px}
+.tr .cat{font-family:"JetBrains Mono",monospace;font-size:11.5px;color:var(--accent);background:var(--accent-bg);padding:2px 8px;border-radius:5px;display:inline-block}
+.tr .dt{font-family:"JetBrains Mono",monospace;font-size:12.5px;color:var(--muted)}
+.acts{display:flex;gap:6px;justify-content:flex-end}
+.empty{padding:56px 20px;text-align:center;color:var(--muted);font-size:14px}
+
+/* ---------- trình soạn thảo ---------- */
+.edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.pane{border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.pane-h{
+  background:var(--surface);border-bottom:1px solid var(--line);padding:8px 13px;
+  font-size:12px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+}
+.mdbar{display:flex;gap:3px;flex-wrap:wrap;margin-left:auto}
+.mdbtn{
+  background:none;border:1px solid transparent;color:var(--muted);cursor:pointer;
+  font-family:"JetBrains Mono",monospace;font-size:11.5px;padding:3px 7px;border-radius:5px;transition:.12s;
+}
+.mdbtn:hover{background:var(--surface2);color:var(--accent);border-color:var(--line)}
+#body{
+  width:100%;min-height:560px;border:none;outline:none;resize:vertical;
+  padding:16px;background:var(--bg);color:var(--text);
+  font-family:"JetBrains Mono",monospace;font-size:13.5px;line-height:1.75;
+}
+.prev{padding:20px;min-height:560px;overflow-x:auto;font-size:15.5px;line-height:1.75}
+.prev > *:first-child{margin-top:0}
+.prev p{margin:16px 0}
+.prev h2{font-size:20px;font-weight:700;margin:30px 0 12px;padding-bottom:7px;border-bottom:1px solid var(--line)}
+.prev h3{font-size:16.5px;font-weight:650;margin:24px 0 9px}
+.prev h4{font-size:15px;font-weight:600;margin:20px 0 8px}
+.prev ul,.prev ol{margin:15px 0;padding-left:24px}
+.prev li{margin:6px 0}
+.prev li::marker{color:var(--accent)}
+.prev blockquote{border-left:3px solid var(--accent);background:var(--surface);padding:12px 16px;margin:20px 0;border-radius:0 8px 8px 0;color:var(--muted)}
+.prev blockquote p{margin:0}
+.prev hr{border:none;border-top:1px solid var(--line);margin:28px 0}
+.prev img{max-width:100%;border-radius:8px;border:1px solid var(--line);margin:18px 0}
+.prev a{color:var(--accent)}
+.prev code{font-family:"JetBrains Mono",monospace;font-size:.85em;background:var(--surface2);padding:2px 6px;border-radius:5px;border:1px solid var(--line)}
+.prev table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;display:block;overflow-x:auto}
+.prev th,.prev td{border:1px solid var(--line);padding:8px 12px;text-align:left}
+.prev th{background:var(--surface);font-weight:600}
+
+.cb{margin:20px 0}
+.cb-head{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--line);border-bottom:none;border-radius:9px 9px 0 0;padding:5px 12px}
+.cb-lang{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--muted)}
+.cb-copy{background:none;border:none;cursor:pointer;color:var(--muted);font-family:"JetBrains Mono",monospace;font-size:11px;padding:3px 7px;border-radius:5px}
+.cb-copy:hover{background:var(--surface2);color:var(--accent)}
+.cb pre{background:var(--code-bg);border:1px solid var(--line);border-radius:0 0 9px 9px;padding:14px;overflow-x:auto;margin:0}
+.cb pre code{background:none;border:none;padding:0;font-size:13px;line-height:1.6;font-family:"JetBrains Mono",monospace;display:block}
+.hljs-keyword,.hljs-selector-tag,.hljs-literal{color:var(--c-key)}
+.hljs-string,.hljs-regexp{color:var(--c-str)}
+.hljs-comment,.hljs-quote{color:var(--c-com);font-style:italic}
+.hljs-number{color:var(--c-num)}
+.hljs-title,.hljs-title.function_,.hljs-section{color:var(--c-fn)}
+.hljs-type,.hljs-title.class_,.hljs-built_in{color:var(--c-type)}
+.hljs-attr,.hljs-attribute,.hljs-variable,.hljs-meta{color:var(--c-attr)}
+
+/* ---------- thanh lưu ---------- */
+.savebar{
+  position:fixed;bottom:0;left:0;right:0;background:var(--surface);
+  border-top:1px solid var(--line);padding:12px 20px;z-index:40;
+}
+.savebar .in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:11px}
+.status{font-size:13px;color:var(--muted);margin-right:auto;display:flex;align-items:center;gap:8px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex:none}
+.dot.ok{background:var(--ok)}
+.dot.busy{background:var(--accent);animation:pulse 1s ease-in-out infinite}
+.dot.err{background:var(--danger)}
+@keyframes pulse{50%{opacity:.25}}
+
+.toast{
+  position:fixed;bottom:82px;left:50%;transform:translateX(-50%) translateY(70px);
+  background:var(--accent);color:#fff;padding:10px 20px;border-radius:9px;font-size:14px;
+  font-weight:500;opacity:0;transition:.25s;z-index:200;pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.hidden{display:none !important}
+
+@media(max-width:900px){
+  .edit-grid{grid-template-columns:1fr}
+  .prev{min-height:auto}
+  #body{min-height:340px}
+  .tr{grid-template-columns:1fr;gap:7px}
+  .tr.h{display:none}
+  .acts{justify-content:flex-start}
+  .row.c2,.row.c3{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="in">
+    <span class="logo">gnut<span class="b">blog</span></span>
+    <span class="badge">quản trị</span>
+    <div class="spacer"></div>
+    <div class="who hidden" id="who"></div>
+    <button class="btn sm hidden" id="siteBtn" onclick="window.open('index.html','_blank')">Xem blog ↗</button>
+    <button class="btn sm hidden" id="outBtn" onclick="logout()">Đăng xuất</button>
+  </div>
+</div>
+
+<main id="app"></main>
+<div class="toast" id="toast"></div>
+
+<script src="render.js"></script>
+<script>
+/* =====================================================================
+   TRANG QUẢN TRỊ gnutblog
+
+   Cơ chế bảo mật: trang này KHÔNG tự kiểm tra mật khẩu. Mọi thao tác
+   ghi đều đi qua GitHub API và được chính GitHub xác thực bằng token.
+   Không có token hợp lệ với quyền ghi vào repo thì không sửa được gì —
+   kể cả khi người khác mở được trang này và xem mã nguồn.
+   ===================================================================== */
+
+const API = 'https://api.github.com';
+const FILE = 'posts.js';
+const DEFAULTS = { owner: 'gnutblog', repo: 'gnutblog.github.io', branch: 'main' };
+
+let S = {
+  token: '', owner: '', repo: '', branch: 'main',
+  user: null, posts: [], sha: null,
+  editing: null, dirty: false
+};
+
+const app  = document.getElementById('app');
+const $    = id => document.getElementById(id);
+const esc2 = s => String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+/* ------------------------- base64 chuẩn UTF-8 ------------------------- */
+function b64encode(str){
+  const bytes = new TextEncoder().encode(str);
+  let bin = '';
+  bytes.forEach(b => bin += String.fromCharCode(b));
+  return btoa(bin);
+}
+function b64decode(b64){
+  const bin = atob(String(b64).replace(/\s/g, ''));
+  const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+}
+
+/* --------------------------- gọi GitHub API --------------------------- */
+async function gh(path, opts){
+  const r = await fetch(API + path, Object.assign({}, opts, {
+    headers: Object.assign({
+      'Authorization': 'Bearer ' + S.token,
+      'Accept': 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28'
+    }, (opts && opts.headers) || {})
+  }));
+  const text = await r.text();
+  let data = null;
+  try{ data = text ? JSON.parse(text) : null; }catch(e){}
+  if(!r.ok){
+    const msg = (data && data.message) || ('HTTP ' + r.status);
+    const err = new Error(msg);
+    err.status = r.status;
+    throw err;
+  }
+  return data;
+}
+
+/* ------------------------------ lưu trữ ------------------------------ */
+function saveSession(remember){
+  const cfg = JSON.stringify({ owner: S.owner, repo: S.repo, branch: S.branch });
+  try{
+    localStorage.setItem('gnut-cfg', cfg);
+    (remember ? localStorage : sessionStorage).setItem('gnut-token', S.token);
+    if(!remember) localStorage.removeItem('gnut-token');
+  }catch(e){}
+}
+function loadSession(){
+  try{
+    const cfg = JSON.parse(localStorage.getItem('gnut-cfg') || 'null');
+    if(cfg) Object.assign(S, cfg);
+    S.token = localStorage.getItem('gnut-token') || sessionStorage.getItem('gnut-token') || '';
+  }catch(e){}
+}
+function logout(){
+  if(S.dirty && !confirm('Bài đang soạn chưa đăng sẽ mất. Vẫn đăng xuất?')) return;
+  try{ localStorage.removeItem('gnut-token'); sessionStorage.removeItem('gnut-token'); }catch(e){}
+  S = { token:'', owner:S.owner, repo:S.repo, branch:S.branch, user:null, posts:[], sha:null, editing:null, dirty:false };
+  document.querySelectorAll('#who,#outBtn,#siteBtn').forEach(e => e.classList.add('hidden'));
+  viewLogin();
+}
+
+/* ============================ MÀN ĐĂNG NHẬP ============================ */
+function viewLogin(err){
+  loadSession();
+  app.innerHTML =
+  '<div class="login"><div class="card">'
+  + '<h1>Đăng nhập</h1>'
+  + '<div class="sub">Xác thực bằng GitHub. Chỉ tài khoản có quyền ghi vào repo mới thêm/sửa/xoá được bài.</div>'
+  + (err ? '<div class="err">' + esc2(err) + '</div>' : '')
+  + '<div class="row c2">'
+    + '<div class="f"><label>Tài khoản GitHub</label><input class="inp" id="i-owner" value="' + esc2(S.owner || DEFAULTS.owner) + '"></div>'
+    + '<div class="f"><label>Nhánh</label><input class="inp" id="i-branch" value="' + esc2(S.branch || DEFAULTS.branch) + '"></div>'
+  + '</div>'
+  + '<div class="f"><label>Repository</label><input class="inp" id="i-repo" value="' + esc2(S.repo || DEFAULTS.repo) + '"></div>'
+  + '<div class="f"><label>Personal access token</label>'
+    + '<input class="inp" id="i-token" type="password" placeholder="github_pat_… hoặc ghp_…" value="' + esc2(S.token) + '">'
+    + '<div class="hint">Tạo tại <b>github.com → Settings → Developer settings → Personal access tokens → Fine-grained tokens</b>. '
+    + 'Chỉ cần chọn đúng repo này và cấp quyền <b>Contents: Read and write</b>.</div>'
+  + '</div>'
+  + '<label class="chk"><input type="checkbox" id="i-remember" checked>'
+    + '<span>Nhớ token trên máy này. Bỏ chọn nếu đang dùng máy chung — khi đó token chỉ tồn tại đến khi đóng tab.</span></label>'
+  + '<button class="btn pri" style="width:100%;padding:11px" id="loginBtn" onclick="doLogin()">Đăng nhập</button>'
+  + '<div class="note"><b>Vì sao không có ô mật khẩu?</b><br>'
+    + 'Blog chạy trên GitHub Pages — không có máy chủ, nên mọi kiểm tra mật khẩu bằng JavaScript đều có thể bị bỏ qua. '
+    + 'Ở đây quyền ghi do <b>GitHub kiểm tra ở phía máy chủ</b>: token chính là chìa khoá, và chỉ mình bạn có nó.</div>'
+  + '</div></div>';
+
+  $('i-token').addEventListener('keydown', e => { if(e.key === 'Enter') doLogin(); });
+}
+
+async function doLogin(){
+  const btn = $('loginBtn');
+  S.owner  = $('i-owner').value.trim();
+  S.repo   = $('i-repo').value.trim();
+  S.branch = $('i-branch').value.trim() || 'main';
+  S.token  = $('i-token').value.trim();
+
+  if(!S.owner || !S.repo || !S.token) return viewLogin('Điền đủ tài khoản, repository và token.');
+
+  btn.disabled = true; btn.textContent = 'Đang kiểm tra…';
+  try{
+    S.user = await gh('/user');
+
+    const repo = await gh('/repos/' + S.owner + '/' + S.repo);
+    if(!repo.permissions || !repo.permissions.push){
+      throw new Error('Tài khoản ' + S.user.login + ' không có quyền ghi vào ' + S.owner + '/' + S.repo + '.');
+    }
+
+    await loadPosts();
+    saveSession($('i-remember').checked);
+    showUser();
+    viewList();
+    toast('Xin chào ' + S.user.login);
+  }catch(e){
+    let m = e.message;
+    if(e.status === 401) m = 'Token không hợp lệ hoặc đã hết hạn.';
+    if(e.status === 404) m = 'Không tìm thấy repo ' + S.owner + '/' + S.repo + '. Kiểm tra lại tên, hoặc token chưa được cấp quyền cho repo này.';
+    viewLogin(m);
+  }
+}
+
+function showUser(){
+  $('who').innerHTML = '<img src="' + esc2(S.user.avatar_url) + '" alt=""><span>'
+    + esc2(S.user.login) + ' · ' + esc2(S.owner + '/' + S.repo) + '</span>';
+  document.querySelectorAll('#who,#outBtn,#siteBtn').forEach(e => e.classList.remove('hidden'));
+}
+
+/* ============================ ĐỌC / GHI DỮ LIỆU ============================ */
+async function loadPosts(){
+  try{
+    const f = await gh('/repos/' + S.owner + '/' + S.repo + '/contents/' + FILE + '?ref=' + encodeURIComponent(S.branch));
+    S.sha = f.sha;
+    const raw = b64decode(f.content);
+    const m = /window\.POSTS\s*=\s*([\s\S]*?);?\s*$/.exec(raw.trim());
+    S.posts = m ? JSON.parse(m[1]) : [];
+  }catch(e){
+    if(e.status === 404){ S.posts = []; S.sha = null; }   // chưa có file, sẽ tạo mới khi đăng
+    else throw e;
+  }
+}
+
+async function commit(message){
+  const content = 'window.POSTS = ' + JSON.stringify(S.posts, null, 2) + ';\n';
+  const body = {
+    message: message,
+    content: b64encode(content),
+    branch: S.branch
+  };
+  if(S.sha) body.sha = S.sha;
+  const r = await gh('/repos/' + S.owner + '/' + S.repo + '/contents/' + FILE, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  S.sha = r.content.sha;
+  return r;
+}
+
+function setStatus(cls, text){
+  const el = $('status');
+  if(el) el.innerHTML = '<span class="dot ' + cls + '"></span><span>' + esc2(text) + '</span>';
+}
+
+async function publish(message, after){
+  setStatus('busy', 'Đang đẩy lên GitHub…');
+  try{
+    await commit(message);
+    S.dirty = false;
+    setStatus('ok', 'Đã đăng. GitHub Pages cập nhật sau khoảng 1 phút.');
+    toast('Đã đăng lên web');
+    if(after) after();
+  }catch(e){
+    if(e.status === 409){
+      setStatus('err', 'File đã bị sửa ở nơi khác. Tải lại rồi thử lại.');
+    }else{
+      setStatus('err', 'Lỗi: ' + e.message);
+    }
+    toast('Không đăng được');
+  }
+}
+
+/* ============================ DANH SÁCH BÀI ============================ */
+function viewList(){
+  const list = S.posts.slice().sort((a,b) => String(b.date||'').localeCompare(String(a.date||'')));
+  app.innerHTML =
+    '<div class="head"><h1>Bài viết <span style="color:var(--muted);font-weight:500">(' + list.length + ')</span></h1>'
+    + '<button class="btn sm" onclick="reload()">Tải lại</button>'
+    + '<button class="btn pri" onclick="editPost(null)">+ Bài mới</button></div>'
+    + (list.length
+      ? '<div class="tbl"><div class="tr h"><div>Tiêu đề</div><div>Chuyên mục</div><div>Ngày</div><div></div></div>'
+        + list.map(p =>
+            '<div class="tr">'
+            + '<div><div class="ti">' + esc2(p.title) + '</div><div class="sl">/#/bai/' + esc2(p.id) + '</div></div>'
+            + '<div><span class="cat">' + esc2(p.category || '—') + '</span></div>'
+            + '<div class="dt">' + esc2(p.date || '') + '</div>'
+            + '<div class="acts">'
+              + '<button class="btn sm" onclick="window.open(\'index.html#/bai/' + esc2(p.id) + '\',\'_blank\')">Xem</button>'
+              + '<button class="btn sm" onclick="editPost(\'' + esc2(p.id) + '\')">Sửa</button>'
+              + '<button class="btn sm dan" onclick="removePost(\'' + esc2(p.id) + '\')">Xoá</button>'
+            + '</div></div>').join('')
+        + '</div>'
+      : '<div class="tbl"><div class="empty">Chưa có bài nào.<br><br><button class="btn pri" onclick="editPost(null)">Viết bài đầu tiên</button></div></div>')
+    + '<div class="savebar"><div class="in"><div class="status" id="status">'
+      + '<span class="dot ok"></span><span>Đã kết nối ' + esc2(S.owner + '/' + S.repo) + '</span></div>'
+      + '<button class="btn sm" onclick="window.open(\'https://github.com/' + esc2(S.owner + '/' + S.repo) + '/deployments\',\'_blank\')">Trạng thái deploy ↗</button>'
+    + '</div></div>';
+}
+
+async function reload(){
+  setStatus('busy', 'Đang tải lại…');
+  try{ await loadPosts(); viewList(); toast('Đã tải lại'); }
+  catch(e){ setStatus('err', 'Lỗi: ' + e.message); }
+}
+
+async function removePost(id){
+  const p = S.posts.find(x => x.id === id);
+  if(!p) return;
+  if(!confirm('Xoá vĩnh viễn bài "' + p.title + '"?\n\nThao tác này tạo một commit trên GitHub, vẫn khôi phục được từ lịch sử.')) return;
+  S.posts = S.posts.filter(x => x.id !== id);
+  viewList();
+  publish('xoá bài: ' + p.title, viewList);
+}
+
+/* ============================ SOẠN THẢO ============================ */
+const CATS = ['Code', 'Cuộc sống'];
+
+function editPost(id){
+  const p = id ? S.posts.find(x => x.id === id) : null;
+  S.editing = p ? JSON.parse(JSON.stringify(p)) : {
+    id: '', title: '', date: new Date().toISOString().slice(0,10),
+    category: 'Code', tags: [], summary: '', body: ''
+  };
+  S.editing._orig = id || null;
+  S.dirty = false;
+  renderEditor();
+}
+
+function renderEditor(){
+  const e = S.editing;
+  const catOpts = CATS.concat(CATS.includes(e.category) || !e.category ? [] : [e.category])
+    .map(c => '<option value="' + esc2(c) + '"' + (c === e.category ? ' selected' : '') + '>' + esc2(c) + '</option>').join('');
+
+  app.innerHTML =
+    '<div class="head">'
+      + '<h1>' + (e._orig ? 'Sửa bài' : 'Bài mới') + '</h1>'
+      + '<button class="btn" onclick="cancelEdit()">← Quay lại</button>'
+    + '</div>'
+
+    + '<div class="f"><label>Tiêu đề</label>'
+      + '<input class="inp" id="f-title" value="' + esc2(e.title) + '" placeholder="Ví dụ: Vì sao Spring cần @Transactional"></div>'
+
+    + '<div class="row c3">'
+      + '<div class="f"><label>Đường dẫn (slug)</label><input class="inp" id="f-id" value="' + esc2(e.id) + '" placeholder="tu-dong-tao-tu-tieu-de">'
+        + '<div class="hint">Link bài: <code>/#/bai/<span id="slugPrev">' + esc2(e.id) + '</span></code></div></div>'
+      + '<div class="f"><label>Chuyên mục</label><select class="inp" id="f-cat">' + catOpts + '</select></div>'
+      + '<div class="f"><label>Ngày đăng</label><input class="inp" id="f-date" type="date" value="' + esc2(e.date) + '"></div>'
+    + '</div>'
+
+    + '<div class="f"><label>Thẻ (cách nhau bằng dấu phẩy)</label>'
+      + '<input class="inp" id="f-tags" value="' + esc2((e.tags || []).join(', ')) + '" placeholder="Java, Spring, AI"></div>'
+
+    + '<div class="f"><label>Tóm tắt</label>'
+      + '<input class="inp" id="f-sum" value="' + esc2(e.summary) + '" placeholder="Một hai câu hiện ở trang chủ và khi chia sẻ link"></div>'
+
+    + '<div class="edit-grid">'
+      + '<div class="pane"><div class="pane-h"><span>Nội dung (Markdown)</span><div class="mdbar">'
+          + '<button class="mdbtn" onclick="wrap(\'**\',\'**\')" title="Đậm">B</button>'
+          + '<button class="mdbtn" onclick="wrap(\'*\',\'*\')" title="Nghiêng"><i>I</i></button>'
+          + '<button class="mdbtn" onclick="wrap(\'`\',\'`\')" title="Mã inline">`code`</button>'
+          + '<button class="mdbtn" onclick="pre(\'## \')" title="Đầu mục">H2</button>'
+          + '<button class="mdbtn" onclick="pre(\'### \')" title="Đầu mục nhỏ">H3</button>'
+          + '<button class="mdbtn" onclick="pre(\'- \')" title="Danh sách">list</button>'
+          + '<button class="mdbtn" onclick="pre(\'&gt; \')" title="Trích dẫn">quote</button>'
+          + '<button class="mdbtn" onclick="wrap(\'[\',\'](https://)\')" title="Liên kết">link</button>'
+          + '<button class="mdbtn" onclick="block(\'java\')" title="Khối mã Java">java</button>'
+          + '<button class="mdbtn" onclick="block(\'\')" title="Khối mã">```</button>'
+        + '</div></div>'
+        + '<textarea id="body" spellcheck="false" placeholder="Viết bài ở đây…">' + esc2(e.body) + '</textarea></div>'
+      + '<div class="pane"><div class="pane-h">Xem trước</div><div class="prev" id="prev"></div></div>'
+    + '</div>'
+
+    + '<div class="savebar"><div class="in">'
+      + '<div class="status" id="status"><span class="dot"></span><span>Chưa có thay đổi</span></div>'
+      + '<button class="btn" onclick="cancelEdit()">Huỷ</button>'
+      + '<button class="btn pri" id="pubBtn" onclick="savePost()">Đăng lên web</button>'
+    + '</div></div>';
+
+  const ta = $('body'), title = $('f-title'), idf = $('f-id');
+
+  const mark = () => { S.dirty = true; setStatus('', 'Có thay đổi chưa đăng'); };
+
+  ta.addEventListener('input', () => { renderPreview(); mark(); });
+  ['f-title','f-id','f-cat','f-date','f-tags','f-sum'].forEach(k => $(k).addEventListener('input', mark));
+
+  title.addEventListener('input', () => {
+    if(!e._orig && !idf._touched){
+      idf.value = slugify(title.value);
+      $('slugPrev').textContent = idf.value;
+    }
+  });
+  idf.addEventListener('input', () => { idf._touched = true; $('slugPrev').textContent = idf.value; });
+
+  ta.addEventListener('keydown', ev => {
+    if(ev.key === 'Tab'){
+      ev.preventDefault();
+      const s = ta.selectionStart;
+      ta.setRangeText('  ', s, ta.selectionEnd, 'end');
+    }
+    if((ev.metaKey || ev.ctrlKey) && ev.key === 's'){ ev.preventDefault(); savePost(); }
+  });
+
+  renderPreview();
+  window.scrollTo(0,0);
+}
+
+function renderPreview(){
+  const html = md($('body').value);
+  $('prev').innerHTML = html || '<span style="color:var(--muted)">Xem trước sẽ hiện ở đây.</span>';
+  highlightAll('.prev');
+}
+
+/* ----- công cụ chèn Markdown ----- */
+function wrap(a, b){
+  const ta = $('body');
+  const s = ta.selectionStart, e2 = ta.selectionEnd;
+  const sel = ta.value.slice(s, e2);
+  ta.setRangeText(a + sel + b, s, e2, sel ? 'end' : 'select');
+  if(!sel) ta.setSelectionRange(s + a.length, s + a.length);
+  ta.focus(); renderPreview(); S.dirty = true;
+}
+function pre(p){
+  const ta = $('body');
+  const s = ta.selectionStart;
+  const ls = ta.value.lastIndexOf('\n', s - 1) + 1;
+  ta.setRangeText(p, ls, ls, 'end');
+  ta.focus(); renderPreview(); S.dirty = true;
+}
+function block(lang){
+  const ta = $('body');
+  const s = ta.selectionStart, e2 = ta.selectionEnd;
+  const sel = ta.value.slice(s, e2);
+  ta.setRangeText('\n```' + lang + '\n' + (sel || '') + '\n```\n', s, e2, 'end');
+  ta.focus(); renderPreview(); S.dirty = true;
+}
+
+function cancelEdit(){
+  if(S.dirty && !confirm('Thay đổi chưa đăng sẽ mất. Quay lại?')) return;
+  S.editing = null; S.dirty = false;
+  viewList();
+}
+
+function savePost(){
+  const e = S.editing;
+  const title = $('f-title').value.trim();
+  let id = $('f-id').value.trim() || slugify(title);
+
+  if(!title) return toast('Chưa có tiêu đề');
+  if(!id)    return toast('Chưa có đường dẫn (slug)');
+  if(!$('body').value.trim()) return toast('Bài chưa có nội dung');
+
+  const trung = S.posts.some(p => p.id === id && p.id !== e._orig);
+  if(trung) return toast('Đường dẫn "' + id + '" đã có bài khác dùng');
+
+  const post = {
+    id: id,
+    title: title,
+    date: $('f-date').value || new Date().toISOString().slice(0,10),
+    category: $('f-cat').value,
+    tags: $('f-tags').value.split(',').map(t => t.trim()).filter(Boolean),
+    summary: $('f-sum').value.trim(),
+    body: $('body').value
+  };
+
+  const laBaiMoi = !e._orig;
+  if(laBaiMoi){
+    S.posts.unshift(post);
+  }else{
+    const i = S.posts.findIndex(p => p.id === e._orig);
+    S.posts[i] = post;
+  }
+  e._orig = id;
+  $('pubBtn').disabled = true;
+
+  publish((laBaiMoi ? 'bài mới: ' : 'sửa bài: ') + title, () => {
+    $('pubBtn').disabled = false;
+    setTimeout(() => { S.editing = null; viewList(); }, 900);
+  });
+  setTimeout(() => { const b = $('pubBtn'); if(b) b.disabled = false; }, 4000);
+}
+
+/* ============================ KHỞI ĐỘNG ============================ */
+window.addEventListener('beforeunload', ev => {
+  if(S.dirty){ ev.preventDefault(); ev.returnValue = ''; }
+});
+
+(async function init(){
+  try{
+    document.documentElement.setAttribute('data-theme',
+      localStorage.getItem('gnut-theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'));
+  }catch(e){ document.documentElement.setAttribute('data-theme','dark'); }
+
+  loadSession();
+  if(S.token && S.owner && S.repo){
+    try{
+      S.user = await gh('/user');
+      await loadPosts();
+      showUser();
+      viewList();
+      return;
+    }catch(e){ /* token hỏng hoặc hết hạn → về màn đăng nhập */ }
+  }
+  viewLogin();
+})();
+</script>
+</body>
+</html>

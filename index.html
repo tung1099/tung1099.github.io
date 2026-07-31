@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gnutblog</title>
+<meta name="description" content="Blog cá nhân — kiến thức code (Java, Spring, AI) và chuyện đời thường.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="gnutblog">
+<meta property="og:title" content="gnutblog">
+<meta property="og:description" content="Blog cá nhân — kiến thức code (Java, Spring, AI) và chuyện đời thường.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230d9488'/><text x='16' y='23' font-size='19' font-family='monospace' font-weight='bold' fill='white' text-anchor='middle'>g</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" defer></script>
+<style>
+:root{
+  --bg:#ffffff; --surface:#f6f8fa; --surface2:#eef1f4; --text:#1f2328; --muted:#656d76;
+  --line:#d8dee4; --accent:#0d9488; --accent-bg:#e6fffa; --code-bg:#f6f8fa;
+  --c-key:#cf222e; --c-str:#0a3069; --c-com:#6e7781; --c-num:#0550ae;
+  --c-fn:#8250df; --c-type:#953800; --c-attr:#0550ae;
+}
+html[data-theme="dark"]{
+  --bg:#0d1117; --surface:#161b22; --surface2:#1c2230; --text:#e6edf3; --muted:#8b949e;
+  --line:#262d36; --accent:#2dd4bf; --accent-bg:#0d2b28; --code-bg:#161b22;
+  --c-key:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff;
+  --c-fn:#d2a8ff; --c-type:#ffa657; --c-attr:#79c0ff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  line-height:1.65; -webkit-font-smoothing:antialiased;
+  transition:background .2s,color .2s;
+}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--accent);color:#fff}
+
+/* ---------- header ---------- */
+header{
+  position:sticky;top:0;z-index:60;background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(12px) saturate(160%);border-bottom:1px solid var(--line);
+}
+.bar{max-width:860px;margin:0 auto;padding:0 22px;height:58px;display:flex;align-items:center;gap:6px}
+.logo{
+  font-family:"JetBrains Mono",monospace;font-weight:700;font-size:17px;
+  letter-spacing:-.03em;margin-right:auto;display:flex;align-items:center;gap:2px;
+}
+.logo .b{color:var(--accent)}
+.logo .cur{width:8px;height:17px;background:var(--accent);display:inline-block;margin-left:3px;animation:bl 1.2s steps(1) infinite}
+@keyframes bl{50%{opacity:0}}
+nav{display:flex;gap:2px;align-items:center}
+.nb{
+  background:none;border:none;cursor:pointer;color:var(--muted);font:inherit;
+  font-size:13.5px;font-weight:500;padding:7px 11px;border-radius:7px;transition:.15s;white-space:nowrap;
+}
+.nb:hover{background:var(--surface);color:var(--text)}
+.nb.on{color:var(--accent);background:var(--accent-bg)}
+.ib{background:none;border:none;cursor:pointer;color:var(--muted);padding:7px;border-radius:7px;display:flex;transition:.15s}
+.ib:hover{background:var(--surface);color:var(--accent)}
+.ib svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- layout ---------- */
+main{max-width:860px;margin:0 auto;padding:44px 22px 100px;min-height:70vh}
+
+.hero{margin-bottom:36px}
+.hero .kicker{
+  font-family:"JetBrains Mono",monospace;font-size:12.5px;color:var(--accent);
+  font-weight:500;margin-bottom:12px;letter-spacing:.02em;
+}
+.hero h1{font-size:clamp(28px,5vw,38px);font-weight:800;letter-spacing:-.03em;line-height:1.15;margin-bottom:13px}
+.hero p{color:var(--muted);font-size:16.5px;max-width:60ch;line-height:1.7}
+
+/* ---------- search + filters ---------- */
+.toolbar{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.search{
+  flex:1;min-width:200px;padding:9px 14px;font:inherit;font-size:14.5px;
+  border:1px solid var(--line);border-radius:9px;background:var(--surface);
+  color:var(--text);outline:none;transition:.15s;
+}
+.search:focus{border-color:var(--accent);background:var(--bg);box-shadow:0 0 0 3px var(--accent-bg)}
+.search::placeholder{color:var(--muted)}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:30px}
+.chip{
+  font-family:"JetBrains Mono",monospace;font-size:12px;padding:5px 11px;border-radius:20px;
+  border:1px solid var(--line);color:var(--muted);cursor:pointer;background:none;transition:.15s;
+}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* ---------- post list ---------- */
+.plist{display:flex;flex-direction:column}
+.pcard{padding:20px 0;border-top:1px solid var(--line);cursor:pointer;transition:.15s}
+.pcard:last-child{border-bottom:1px solid var(--line)}
+.pcard:hover h2{color:var(--accent)}
+.pmeta{display:flex;gap:9px;align-items:center;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-bottom:8px}
+.pmeta .dot{opacity:.45}
+.cat{
+  font-family:"JetBrains Mono",monospace;font-size:11.5px;font-weight:500;
+  color:var(--accent);background:var(--accent-bg);padding:2px 8px;border-radius:5px;
+}
+.pcard h2{font-size:19.5px;font-weight:700;letter-spacing:-.02em;line-height:1.35;margin-bottom:6px;transition:.15s}
+.pcard .sum{color:var(--muted);font-size:14.5px;line-height:1.6}
+.ptags{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.ptag{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--muted);border:1px solid var(--line);padding:1px 7px;border-radius:4px}
+
+/* ---------- article ---------- */
+.back{
+  display:inline-flex;align-items:center;gap:6px;color:var(--muted);
+  font-size:13.5px;font-weight:500;margin-bottom:24px;cursor:pointer;
+}
+.back:hover{color:var(--accent)}
+article h1{font-size:clamp(26px,4.6vw,36px);font-weight:800;letter-spacing:-.03em;line-height:1.2;margin:10px 0 14px}
+.abody{font-size:16.5px;line-height:1.78;margin-top:30px}
+.abody > *:first-child{margin-top:0}
+.abody p{margin:19px 0}
+.abody h2{font-size:22px;font-weight:700;letter-spacing:-.02em;margin:40px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.abody h3{font-size:17.5px;font-weight:650;margin:30px 0 10px}
+.abody h4{font-size:15.5px;font-weight:600;margin:24px 0 8px}
+.abody ul,.abody ol{margin:18px 0;padding-left:25px}
+.abody li{margin:7px 0}
+.abody li::marker{color:var(--accent)}
+.abody blockquote{
+  border-left:3px solid var(--accent);background:var(--surface);
+  padding:14px 18px;margin:24px 0;border-radius:0 8px 8px 0;color:var(--muted);
+}
+.abody blockquote p{margin:0}
+.abody a{color:var(--accent);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+.abody a:hover{text-decoration-thickness:2px}
+.abody hr{border:none;border-top:1px solid var(--line);margin:36px 0}
+.abody img{max-width:100%;height:auto;border-radius:9px;margin:24px 0;border:1px solid var(--line)}
+.abody strong{font-weight:650}
+.abody code{
+  font-family:"JetBrains Mono",monospace;font-size:.85em;background:var(--surface2);
+  padding:2px 6px;border-radius:5px;border:1px solid var(--line);
+}
+.abody table{width:100%;border-collapse:collapse;margin:24px 0;font-size:14.5px;display:block;overflow-x:auto}
+.abody th,.abody td{border:1px solid var(--line);padding:9px 13px;text-align:left}
+.abody th{background:var(--surface);font-weight:600}
+
+/* ---------- code block ---------- */
+.cb{position:relative;margin:24px 0}
+.cb-head{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--surface);border:1px solid var(--line);border-bottom:none;
+  border-radius:9px 9px 0 0;padding:6px 12px;
+}
+.cb-lang{font-family:"JetBrains Mono",monospace;font-size:11.5px;color:var(--muted);font-weight:500}
+.cb-copy{
+  background:none;border:none;cursor:pointer;color:var(--muted);font-family:"JetBrains Mono",monospace;
+  font-size:11.5px;padding:3px 8px;border-radius:5px;transition:.15s;
+}
+.cb-copy:hover{background:var(--surface2);color:var(--accent)}
+.cb pre{
+  background:var(--code-bg);border:1px solid var(--line);border-radius:0 0 9px 9px;
+  padding:15px;overflow-x:auto;margin:0;
+}
+.cb pre code{
+  background:none;border:none;padding:0;font-size:13.5px;line-height:1.62;
+  font-family:"JetBrains Mono",monospace;display:block;
+}
+.hljs-keyword,.hljs-selector-tag,.hljs-literal{color:var(--c-key)}
+.hljs-string,.hljs-regexp{color:var(--c-str)}
+.hljs-comment,.hljs-quote{color:var(--c-com);font-style:italic}
+.hljs-number{color:var(--c-num)}
+.hljs-title,.hljs-title.function_,.hljs-section{color:var(--c-fn)}
+.hljs-type,.hljs-title.class_,.hljs-built_in{color:var(--c-type)}
+.hljs-attr,.hljs-attribute,.hljs-variable,.hljs-meta{color:var(--c-attr)}
+.hljs-meta .hljs-string{color:var(--c-str)}
+
+/* ---------- article footer ---------- */
+.afoot{margin-top:52px;padding-top:26px;border-top:1px solid var(--line)}
+.share{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:30px}
+.share span{font-size:13.5px;color:var(--muted);margin-right:2px}
+.sbtn{
+  font-size:13px;font-weight:500;padding:6px 13px;border-radius:7px;
+  border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer;transition:.15s;
+}
+.sbtn:hover{border-color:var(--accent);color:var(--accent)}
+.nextprev{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.np{
+  border:1px solid var(--line);border-radius:10px;padding:14px 16px;cursor:pointer;transition:.15s;background:var(--surface);
+}
+.np:hover{border-color:var(--accent)}
+.np .lbl{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--muted);margin-bottom:5px}
+.np .t{font-size:14px;font-weight:600;line-height:1.4}
+.np.r{text-align:right}
+
+/* ---------- about ---------- */
+.about{font-size:16.5px;line-height:1.78}
+.about p{margin:19px 0}
+.about h2{font-size:20px;font-weight:700;margin:34px 0 12px}
+.stack{display:flex;gap:7px;flex-wrap:wrap;margin:16px 0 4px}
+.stack span{font-family:"JetBrains Mono",monospace;font-size:12px;padding:4px 10px;border-radius:6px;background:var(--surface);border:1px solid var(--line)}
+.links{display:flex;gap:9px;flex-wrap:wrap;margin-top:26px}
+.links a{border:1px solid var(--line);background:var(--surface);padding:8px 15px;border-radius:8px;font-size:13.5px;font-weight:500;transition:.15s}
+.links a:hover{border-color:var(--accent);color:var(--accent)}
+
+.empty{color:var(--muted);text-align:center;padding:64px 20px;font-size:15px;border:1px dashed var(--line);border-radius:12px}
+.toast{
+  position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--accent);color:#fff;padding:10px 20px;border-radius:9px;font-size:14px;
+  font-weight:500;opacity:0;transition:.25s;z-index:200;pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+footer{border-top:1px solid var(--line);padding:26px 22px;text-align:center;color:var(--muted);font-size:12.5px}
+footer a{color:var(--muted);text-decoration:underline;text-underline-offset:2px}
+footer a:hover{color:var(--accent)}
+
+@media(max-width:640px){
+  .bar{padding:0 16px;height:54px}
+  main{padding:32px 16px 70px}
+  .nb{padding:6px 8px;font-size:13px}
+  .abody{font-size:16px}
+  .nextprev{grid-template-columns:1fr}
+  .np.r{text-align:left}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <a class="logo" href="#/" onclick="nav('')"><span>gnut</span><span class="b">blog</span><i class="cur"></i></a>
+    <nav>
+      <button class="nb" data-r="" onclick="nav('')">Tất cả</button>
+      <button class="nb" data-r="chuyen-muc/Code" onclick="nav('chuyen-muc/Code')">Code</button>
+      <button class="nb" data-r="chuyen-muc/Cuộc sống" onclick="nav('chuyen-muc/Cuộc sống')">Cuộc sống</button>
+      <button class="nb" data-r="gioi-thieu" onclick="nav('gioi-thieu')">Giới thiệu</button>
+      <button class="ib" id="themeBtn" onclick="toggleTheme()" title="Sáng / tối"></button>
+    </nav>
+  </div>
+</header>
+
+<main id="app"></main>
+<div class="toast" id="toast"></div>
+
+<footer>
+  © <span id="yr"></span> gnutblog · <a href="admin.html">Quản trị</a>
+</footer>
+
+<!-- ==== dữ liệu bài viết (trang quản trị sẽ ghi đè file này) ==== -->
+<script src="render.js"></script>
+<script src="posts.js"></script>
+
+<script>
+/* =============================================================
+   CẤU HÌNH — sửa thông tin của bạn ở đây
+   ============================================================= */
+const SITE = {
+  ten: "gnutblog",
+  kicker: "// ghi lại trước khi quên",
+  tieuDe: "Kiến thức code và vài chuyện đời thường",
+  moTa: "Nơi tôi viết lại những gì học được về Java, Spring, AI — cùng vài ghi chép ngoài lề. Viết chủ yếu cho tôi của sáu tháng sau, nhưng nếu hữu ích cho bạn thì càng tốt.",
+  gioiThieu: `
+Xin chào, mình là **Gnut**.
+
+Mình viết backend, chủ yếu Java và Spring, và đang dành khá nhiều thời gian tìm hiểu cách ghép mô hình ngôn ngữ vào hệ thống thật — thứ nghe thì hay nhưng làm thì đầy chi tiết vụn vặt không ai kể.
+
+Trang này có hai loại bài. **Code** là những thứ mình gỡ ra được sau khi loay hoay, viết lại cho gọn để lần sau khỏi mất công. **Cuộc sống** là phần còn lại — sách, thói quen, vài suy nghĩ chưa kịp ngăn nắp.
+
+Không có lịch đăng. Có gì đáng viết thì viết.
+
+## Thường làm việc với
+
+@@STACK@@
+
+Thấy mình sai chỗ nào thì cứ nhắn, mình cảm ơn thật lòng.
+`,
+  stack: ["Java", "Spring Boot", "PostgreSQL", "Docker", "Spring AI", "RAG", "Kafka", "JUnit"],
+  lienKet: [
+    { ten: "Email",    url: "mailto:dtroyal1102@gmail.com" },
+    { ten: "GitHub",   url: "https://github.com/gnutblog" },
+    { ten: "LinkedIn", url: "https://linkedin.com/in/" }
+  ]
+};
+
+/* =============================================================
+   TIỆN ÍCH
+   ============================================================= */
+const posts = () => (window.POSTS || []).slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+
+function fmtDate(iso){
+  if(!iso) return '';
+  const [y,m,d] = iso.split('-');
+  return (+d) + '/' + (+m) + '/' + y;
+}
+function readTime(body){
+  const w = String(body||'').trim().split(/\s+/).length;
+  return Math.max(1, Math.round(w/180)) + ' phút đọc';
+}
+function highlight(){ highlightAll('.abody'); }
+function setMeta(title, desc){
+  document.title = title;
+  const set = (sel, val) => { const el = document.querySelector(sel); if(el) el.setAttribute('content', val); };
+  set('meta[name="description"]', desc);
+  set('meta[property="og:title"]', title);
+  set('meta[property="og:description"]', desc);
+}
+
+/* =============================================================
+   CÁC MÀN HÌNH
+   ============================================================= */
+const app = document.getElementById('app');
+let q = '', activeTag = '';
+
+function cardHTML(p){
+  return '<div class="pcard" onclick="nav(\'bai/'+p.id+'\')">'
+    + '<div class="pmeta"><span class="cat">'+esc(p.category||'')+'</span>'
+    + '<span>'+fmtDate(p.date)+'</span><span class="dot">·</span><span>'+readTime(p.body)+'</span></div>'
+    + '<h2>'+esc(p.title)+'</h2>'
+    + '<p class="sum">'+esc(p.summary||'')+'</p>'
+    + ((p.tags&&p.tags.length) ? '<div class="ptags">'+p.tags.map(t=>'<span class="ptag">#'+esc(t)+'</span>').join('')+'</div>' : '')
+    + '</div>';
+}
+
+function viewList(category){
+  const all = posts();
+  const allTags = [...new Set(all.flatMap(p=>p.tags||[]))];
+  const kw = q.toLowerCase().trim();
+
+  const list = all.filter(p=>{
+    if(category && p.category !== category) return false;
+    if(activeTag && !(p.tags||[]).includes(activeTag)) return false;
+    if(kw && !((p.title+' '+(p.summary||'')+' '+(p.body||'')+' '+(p.tags||[]).join(' ')).toLowerCase().includes(kw))) return false;
+    return true;
+  });
+
+  setMeta(category ? category + ' — gnutblog' : 'gnutblog — ' + SITE.tieuDe, SITE.moTa);
+
+  app.innerHTML =
+    '<section class="hero">'
+      + '<div class="kicker">'+esc(SITE.kicker)+'</div>'
+      + '<h1>'+esc(category || SITE.tieuDe)+'</h1>'
+      + '<p>'+esc(category ? 'Tất cả bài trong chuyên mục ' + category + '.' : SITE.moTa)+'</p>'
+    + '</section>'
+    + '<div class="toolbar"><input class="search" id="q" type="search" placeholder="Tìm bài viết…" value="'+esc(q)+'"></div>'
+    + '<div class="chips">'
+      + '<button class="chip'+(activeTag?'':' on')+'" onclick="setTag(\'\')">tất cả</button>'
+      + allTags.map(t=>'<button class="chip'+(activeTag===t?' on':'')+'" onclick="setTag(\''+t.replace(/'/g,"\\'")+'\')">#'+esc(t)+'</button>').join('')
+    + '</div>'
+    + (list.length
+        ? '<div class="plist">'+list.map(cardHTML).join('')+'</div>'
+        : '<div class="empty">Chưa có bài nào khớp.<br>Thử bỏ bớt bộ lọc hoặc từ khoá.</div>');
+
+  const inp = document.getElementById('q');
+  inp.oninput = e => {
+    q = e.target.value;
+    viewList(category);
+    const n = document.getElementById('q');
+    n.focus(); n.setSelectionRange(n.value.length, n.value.length);
+  };
+}
+
+function viewPost(id){
+  const all = posts();
+  const idx = all.findIndex(p=>p.id===id);
+  if(idx === -1){
+    app.innerHTML = '<div class="empty">Không tìm thấy bài viết này.<br><br>'
+      + '<button class="sbtn" onclick="nav(\'\')">Về trang chủ</button></div>';
+    return;
+  }
+  const p = all[idx];
+  const newer = all[idx-1], older = all[idx+1];
+
+  setMeta(p.title + ' — gnutblog', p.summary || SITE.moTa);
+
+  app.innerHTML =
+    '<div class="back" onclick="nav(\'\')">← Tất cả bài viết</div>'
+    + '<article>'
+      + '<div class="pmeta"><span class="cat">'+esc(p.category||'')+'</span>'
+      + '<span>'+fmtDate(p.date)+'</span><span class="dot">·</span><span>'+readTime(p.body)+'</span></div>'
+      + '<h1>'+esc(p.title)+'</h1>'
+      + ((p.tags&&p.tags.length) ? '<div class="ptags">'+p.tags.map(t=>'<span class="ptag" style="cursor:pointer" onclick="setTag(\''+t.replace(/'/g,"\\'")+'\');nav(\'\')">#'+esc(t)+'</span>').join('')+'</div>' : '')
+      + '<div class="abody">'+md(p.body||'')+'</div>'
+    + '</article>'
+    + '<div class="afoot">'
+      + '<div class="share"><span>Chia sẻ bài này:</span>'
+        + '<button class="sbtn" onclick="copyLink()">Copy link</button>'
+        + '<button class="sbtn" onclick="window.open(\'https://www.facebook.com/sharer/sharer.php?u=\'+encodeURIComponent(location.href),\'_blank\')">Facebook</button>'
+        + '<button class="sbtn" onclick="window.open(\'https://twitter.com/intent/tweet?url=\'+encodeURIComponent(location.href)+\'&text=\'+encodeURIComponent(document.title),\'_blank\')">X</button>'
+      + '</div>'
+      + '<div class="nextprev">'
+        + (older ? '<div class="np" onclick="nav(\'bai/'+older.id+'\')"><div class="lbl">← Bài cũ hơn</div><div class="t">'+esc(older.title)+'</div></div>' : '<div></div>')
+        + (newer ? '<div class="np r" onclick="nav(\'bai/'+newer.id+'\')"><div class="lbl">Bài mới hơn →</div><div class="t">'+esc(newer.title)+'</div></div>' : '<div></div>')
+      + '</div>'
+    + '</div>';
+
+  highlight();
+  window.scrollTo(0,0);
+}
+
+function viewAbout(){
+  setMeta('Giới thiệu — gnutblog', SITE.moTa);
+  const stackHTML = '<div class="stack">'+SITE.stack.map(s=>'<span>'+esc(s)+'</span>').join('')+'</div>';
+  app.innerHTML =
+    '<section class="hero"><div class="kicker">// whoami</div><h1>Giới thiệu</h1></section>'
+    + '<div class="about">'+ md(SITE.gioiThieu).replace('<p>@@STACK@@</p>', stackHTML)
+    + '<div class="links">'+SITE.lienKet.map(l=>'<a href="'+l.url+'" target="_blank" rel="noopener">'+esc(l.ten)+' ↗</a>').join('')+'</div>'
+    + '</div>';
+  window.scrollTo(0,0);
+}
+
+/* =============================================================
+   ĐỊNH TUYẾN — mỗi bài có link riêng chia sẻ được
+   ============================================================= */
+function nav(route){
+  location.hash = '#/' + route;
+  if(!route) window.scrollTo(0,0);
+}
+function setTag(t){ activeTag = t; route(); }
+
+function route(){
+  const h = decodeURIComponent(location.hash.replace(/^#\/?/, ''));
+  document.querySelectorAll('.nb[data-r]').forEach(b => b.classList.toggle('on', b.dataset.r === h));
+
+  if(h.startsWith('bai/'))            viewPost(h.slice(4));
+  else if(h.startsWith('chuyen-muc/')) viewList(h.slice(11));
+  else if(h === 'gioi-thieu')          viewAbout();
+  else                                 viewList('');
+}
+
+/* =============================================================
+   GIAO DIỆN SÁNG / TỐI
+   ============================================================= */
+const ICON_SUN  = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+const ICON_MOON = '<svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
+
+function setTheme(t){
+  document.documentElement.setAttribute('data-theme', t);
+  document.getElementById('themeBtn').innerHTML = t === 'dark' ? ICON_SUN : ICON_MOON;
+  try{ localStorage.setItem('gnut-theme', t); }catch(e){}
+}
+function toggleTheme(){
+  setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+
+/* =============================================================
+   KHỞI ĐỘNG
+   ============================================================= */
+(function init(){
+  let t = 'dark';
+  try{ t = localStorage.getItem('gnut-theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'); }catch(e){}
+  setTheme(t);
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  if(!window.POSTS){
+    window.POSTS = [];
+    app.innerHTML = '<div class="empty">Không nạp được <code>posts.js</code>.<br><br>'
+      + 'Nếu đang mở bằng cách nhấp đúp vào file, hãy chạy một máy chủ cục bộ:<br>'
+      + '<code>python3 -m http.server 8000</code><br>rồi mở <code>http://localhost:8000</code></div>';
+  }
+
+  window.addEventListener('hashchange', route);
+  window.addEventListener('load', highlight);
+  route();
+})();
+</script>
+</body>
+</html>
