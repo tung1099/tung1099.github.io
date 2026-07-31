@@ -4,29 +4,48 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Quản trị — gnutblog</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230d9488'/><text x='16' y='23' font-size='19' font-family='monospace' font-weight='bold' fill='white' text-anchor='middle'>g</text></svg>">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<title>Quản trị — Blog cá nhân</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23b45309'/><text x='16' y='24' font-size='21' font-family='Georgia,serif' fill='%23fdfcfa' text-anchor='middle'>B</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/dockerfile.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/properties.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/groovy.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/nginx.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/http.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/protobuf.min.js" defer></script>
 <style>
+/* ============================================================
+   BẢNG MÀU — giữ giống hệt index.html để xem trước cho đúng.
+   Sửa màu thì sửa cả hai file.
+   ============================================================ */
 :root{
-  --bg:#ffffff; --surface:#f6f8fa; --surface2:#eef1f4; --text:#1f2328; --muted:#656d76;
-  --line:#d8dee4; --accent:#0d9488; --accent-bg:#e6fffa; --code-bg:#f6f8fa;
-  --danger:#cf222e; --danger-bg:#ffebe9; --ok:#1a7f37;
-  --c-key:#cf222e; --c-str:#0a3069; --c-com:#6e7781; --c-num:#0550ae;
-  --c-fn:#8250df; --c-type:#953800; --c-attr:#0550ae;
+  --bg:#fdfcfa; --surface:#ffffff; --surface2:#f4efe6; --text:#1c1a17; --muted:#6b6459;
+  --line:#e8e3da; --accent:#b45309; --accent-bg:#fef3e2; --code-bg:#fbf8f2;
+  --shadow:0 1px 3px rgba(28,26,23,.05);
+  --danger:#b91c1c; --danger-bg:#fdeceb; --ok:#4d7c0f;
+  --c-key:#9d0006; --c-str:#79740e; --c-com:#928374; --c-num:#8f3f71;
+  --c-fn:#076678; --c-type:#b57614; --c-attr:#af3a03;
 }
 html[data-theme="dark"]{
-  --bg:#0d1117; --surface:#161b22; --surface2:#1c2230; --text:#e6edf3; --muted:#8b949e;
-  --line:#262d36; --accent:#2dd4bf; --accent-bg:#0d2b28; --code-bg:#161b22;
-  --danger:#f85149; --danger-bg:#2d1416; --ok:#3fb950;
-  --c-key:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff;
-  --c-fn:#d2a8ff; --c-type:#ffa657; --c-attr:#79c0ff;
+  --bg:#16150f; --surface:#1f1e18; --surface2:#2a2820; --text:#ece7dd; --muted:#9c948a;
+  --line:#302e26; --accent:#f0a952; --accent-bg:#2a2318; --code-bg:#1b1a14;
+  --shadow:0 1px 3px rgba(0,0,0,.3);
+  --danger:#fb4934; --danger-bg:#2e1a15; --ok:#b8bb26;
+  --c-key:#fb4934; --c-str:#b8bb26; --c-com:#928374; --c-num:#d3869b;
+  --c-fn:#83a598; --c-type:#fabd2f; --c-attr:#fe8019;
+}
+:root{
+  --f-sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --f-serif:Lora,Georgia,"Times New Roman",serif;
+  --f-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{
   background:var(--bg);color:var(--text);
-  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-family:var(--f-sans);
   line-height:1.6;-webkit-font-smoothing:antialiased;
 }
 a{color:var(--accent)}
@@ -37,11 +56,11 @@ input,select,textarea,button{font-family:inherit}
   border-bottom:1px solid var(--line);background:var(--surface);
   position:sticky;top:0;z-index:50;
 }
-.topbar .in{max-width:1180px;margin:0 auto;padding:0 20px;height:56px;display:flex;align-items:center;gap:12px}
-.logo{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:15px;letter-spacing:-.03em}
+.topbar .in{max-width:1180px;margin:0 auto;padding:0 20px;height:58px;display:flex;align-items:center;gap:12px}
+.logo{font-family:var(--f-serif);font-weight:600;font-size:18px;letter-spacing:-.01em}
 .logo .b{color:var(--accent)}
 .badge{
-  font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--accent);
+  font-family:var(--f-mono);font-size:11px;color:var(--accent);
   background:var(--accent-bg);padding:3px 9px;border-radius:20px;font-weight:600;
 }
 .spacer{margin-left:auto}
@@ -77,8 +96,8 @@ label{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-b
 
 /* ---------- màn đăng nhập ---------- */
 .login{max-width:470px;margin:52px auto}
-.card{border:1px solid var(--line);border-radius:14px;padding:28px;background:var(--surface)}
-.login h1{font-size:22px;font-weight:750;letter-spacing:-.02em;margin-bottom:6px}
+.card{border:1px solid var(--line);border-radius:14px;padding:28px;background:var(--surface);box-shadow:var(--shadow)}
+.login h1{font-family:var(--f-serif);font-size:24px;font-weight:600;letter-spacing:-.01em;margin-bottom:6px}
 .login .sub{color:var(--muted);font-size:14px;margin-bottom:24px}
 .note{
   border:1px solid var(--line);border-left:3px solid var(--accent);background:var(--bg);
@@ -94,66 +113,90 @@ label{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-b
 
 /* ---------- danh sách bài ---------- */
 .head{display:flex;align-items:center;gap:12px;margin-bottom:22px;flex-wrap:wrap}
-.head h1{font-size:23px;font-weight:750;letter-spacing:-.02em;margin-right:auto}
-.tbl{border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.head h1{font-family:var(--f-serif);font-size:25px;font-weight:600;letter-spacing:-.01em;margin-right:auto}
+.tbl{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface);box-shadow:var(--shadow)}
 .tr{
   display:grid;grid-template-columns:1fr 108px 96px 150px;gap:12px;align-items:center;
   padding:13px 16px;border-bottom:1px solid var(--line);transition:.12s;
 }
 .tr:last-child{border-bottom:none}
-.tr:hover{background:var(--surface)}
-.tr.h{background:var(--surface);font-size:11.5px;font-weight:650;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
-.tr .ti{font-weight:600;font-size:14.5px;line-height:1.4}
-.tr .sl{font-family:"JetBrains Mono",monospace;font-size:11.5px;color:var(--muted);margin-top:3px}
-.tr .cat{font-family:"JetBrains Mono",monospace;font-size:11.5px;color:var(--accent);background:var(--accent-bg);padding:2px 8px;border-radius:5px;display:inline-block}
-.tr .dt{font-family:"JetBrains Mono",monospace;font-size:12.5px;color:var(--muted)}
+.tr:hover{background:var(--accent-bg)}
+.tr.h{background:var(--surface2);font-size:11.5px;font-weight:650;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.tr .ti{font-family:var(--f-serif);font-weight:600;font-size:16px;line-height:1.4}
+.tr .sl{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);margin-top:3px}
+.tr .cat{font-size:11.5px;font-weight:600;color:var(--accent);background:var(--accent-bg);padding:2px 10px;border-radius:20px;display:inline-block}
+.tr .lvl{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);border:1px solid var(--line);padding:1px 7px;border-radius:20px;display:inline-block;margin-top:4px}
+.tr .dt{font-family:var(--f-mono);font-size:12.5px;color:var(--muted)}
 .acts{display:flex;gap:6px;justify-content:flex-end}
 .empty{padding:56px 20px;text-align:center;color:var(--muted);font-size:14px}
 
 /* ---------- trình soạn thảo ---------- */
 .edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
-.pane{border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.pane{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface);box-shadow:var(--shadow)}
 .pane-h{
-  background:var(--surface);border-bottom:1px solid var(--line);padding:8px 13px;
+  background:var(--surface2);border-bottom:1px solid var(--line);padding:8px 13px;
   font-size:12px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:8px;flex-wrap:wrap;
 }
 .mdbar{display:flex;gap:3px;flex-wrap:wrap;margin-left:auto}
 .mdbtn{
   background:none;border:1px solid transparent;color:var(--muted);cursor:pointer;
-  font-family:"JetBrains Mono",monospace;font-size:11.5px;padding:3px 7px;border-radius:5px;transition:.12s;
+  font-family:var(--f-mono);font-size:11.5px;padding:3px 7px;border-radius:5px;transition:.12s;
 }
-.mdbtn:hover{background:var(--surface2);color:var(--accent);border-color:var(--line)}
+.mdbtn:hover{background:var(--accent-bg);color:var(--accent);border-color:var(--line)}
 #body{
-  width:100%;min-height:560px;border:none;outline:none;resize:vertical;
-  padding:16px;background:var(--bg);color:var(--text);
-  font-family:"JetBrains Mono",monospace;font-size:13.5px;line-height:1.75;
+  width:100%;min-height:560px;border:none;outline:none;resize:vertical;display:block;
+  padding:18px;background:var(--surface);color:var(--text);
+  font-family:var(--f-mono);font-size:13.5px;line-height:1.75;
 }
-.prev{padding:20px;min-height:560px;overflow-x:auto;font-size:15.5px;line-height:1.75}
+/* xem trước dùng đúng kiểu chữ của trang blog để đăng lên không bị lệch */
+.prev{
+  padding:24px;min-height:560px;overflow-x:auto;background:var(--bg);
+  font-family:var(--f-serif);font-size:17px;line-height:1.85;
+}
 .prev > *:first-child{margin-top:0}
-.prev p{margin:16px 0}
-.prev h2{font-size:20px;font-weight:700;margin:30px 0 12px;padding-bottom:7px;border-bottom:1px solid var(--line)}
-.prev h3{font-size:16.5px;font-weight:650;margin:24px 0 9px}
-.prev h4{font-size:15px;font-weight:600;margin:20px 0 8px}
-.prev ul,.prev ol{margin:15px 0;padding-left:24px}
-.prev li{margin:6px 0}
+.prev p{margin:20px 0}
+.prev h2{font-family:var(--f-sans);font-size:21px;font-weight:700;line-height:1.3;margin:40px 0 13px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.prev h3{font-family:var(--f-sans);font-size:17.5px;font-weight:600;margin:30px 0 9px}
+.prev h4{font-family:var(--f-sans);font-size:15.5px;font-weight:600;margin:24px 0 8px}
+.prev ul,.prev ol{margin:18px 0;padding-left:25px}
+.prev li{margin:8px 0}
 .prev li::marker{color:var(--accent)}
-.prev blockquote{border-left:3px solid var(--accent);background:var(--surface);padding:12px 16px;margin:20px 0;border-radius:0 8px 8px 0;color:var(--muted)}
+.prev blockquote{border-left:3px solid var(--accent);background:var(--accent-bg);padding:13px 18px;margin:24px 0;border-radius:0 10px 10px 0;color:var(--muted);font-style:italic}
 .prev blockquote p{margin:0}
-.prev hr{border:none;border-top:1px solid var(--line);margin:28px 0}
-.prev img{max-width:100%;border-radius:8px;border:1px solid var(--line);margin:18px 0}
-.prev a{color:var(--accent)}
-.prev code{font-family:"JetBrains Mono",monospace;font-size:.85em;background:var(--surface2);padding:2px 6px;border-radius:5px;border:1px solid var(--line)}
-.prev table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;display:block;overflow-x:auto}
-.prev th,.prev td{border:1px solid var(--line);padding:8px 12px;text-align:left}
-.prev th{background:var(--surface);font-weight:600}
+.prev blockquote p + p{margin-top:12px}
+.prev hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+.prev a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.prev strong{font-weight:600}
+.prev code{font-family:var(--f-mono);font-size:.82em;background:var(--accent-bg);color:var(--accent);padding:2px 6px;border-radius:5px}
+.prev .tw{overflow-x:auto;margin:24px 0;border-radius:10px}
+.prev table{width:100%;border-collapse:collapse;font-family:var(--f-sans);font-size:14.5px}
+.prev th,.prev td{border:1px solid var(--line);padding:9px 13px;text-align:left}
+.prev th{background:var(--surface2);font-weight:600;white-space:nowrap}
 
-.cb{margin:20px 0}
-.cb-head{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--line);border-bottom:none;border-radius:9px 9px 0 0;padding:5px 12px}
-.cb-lang{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--muted)}
-.cb-copy{background:none;border:none;cursor:pointer;color:var(--muted);font-family:"JetBrains Mono",monospace;font-size:11px;padding:3px 7px;border-radius:5px}
-.cb-copy:hover{background:var(--surface2);color:var(--accent)}
-.cb pre{background:var(--code-bg);border:1px solid var(--line);border-radius:0 0 9px 9px;padding:14px;overflow-x:auto;margin:0}
-.cb pre code{background:none;border:none;padding:0;font-size:13px;line-height:1.6;font-family:"JetBrains Mono",monospace;display:block}
+/* ảnh / video / biểu đồ — giống hệt trang blog */
+.prev figure{margin:26px 0}
+.prev figure img{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--line);background:var(--surface)}
+.prev figure video{display:block;max-width:100%;max-height:60vh;width:auto;height:auto;margin:0 auto;border-radius:10px;border:1px solid var(--line);background:#000}
+.prev figcaption{font-family:var(--f-sans);font-size:13px;line-height:1.6;color:var(--muted);text-align:center;margin-top:10px;font-style:normal}
+.prev p img{display:inline-block;width:auto;max-width:100%;margin:0;vertical-align:middle}
+.prev .video{position:relative;aspect-ratio:16/9;background:#000;border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+.prev .video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.prev figure.dgm{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 16px}
+.prev .mermaid{display:block;text-align:center;overflow-x:auto;font-family:var(--f-sans);font-size:14px;line-height:1.5}
+.prev .mermaid.dgm-wait{color:transparent}
+.prev .mermaid svg{max-width:100%;height:auto}
+.prev .mermaid.dgm-err{display:block;color:var(--muted);font-family:var(--f-mono);font-size:12.5px;white-space:pre-wrap;text-align:left}
+
+/* kéo-thả ảnh vào ô soạn thảo */
+.pane.drop{outline:2px dashed var(--accent);outline-offset:-4px;background:var(--accent-bg)}
+
+.cb{margin:24px 0}
+.cb-head{display:flex;align-items:center;justify-content:space-between;background:var(--surface2);border:1px solid var(--line);border-bottom:none;border-radius:10px 10px 0 0;padding:5px 13px}
+.cb-lang{font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.cb-copy{background:none;border:none;cursor:pointer;color:var(--muted);font-family:var(--f-mono);font-size:11px;padding:3px 8px;border-radius:5px;transition:.15s}
+.cb-copy:hover{background:var(--accent-bg);color:var(--accent)}
+.cb pre{background:var(--code-bg);border:1px solid var(--line);border-radius:0 0 10px 10px;padding:15px;overflow-x:auto;margin:0}
+.cb pre code{background:none;border:none;color:var(--text);padding:0;font-size:13px;line-height:1.65;font-family:var(--f-mono);display:block}
 .hljs-keyword,.hljs-selector-tag,.hljs-literal{color:var(--c-key)}
 .hljs-string,.hljs-regexp{color:var(--c-str)}
 .hljs-comment,.hljs-quote{color:var(--c-com);font-style:italic}
@@ -198,7 +241,7 @@ label{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-b
 
 <div class="topbar">
   <div class="in">
-    <span class="logo">gnut<span class="b">blog</span></span>
+    <span class="logo">Blog <span class="b">cá nhân</span></span>
     <span class="badge">quản trị</span>
     <div class="spacer"></div>
     <div class="who hidden" id="who"></div>
@@ -213,7 +256,7 @@ label{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-b
 <script src="render.js"></script>
 <script>
 /* =====================================================================
-   TRANG QUẢN TRỊ gnutblog
+   TRANG QUẢN TRỊ — Blog cá nhân (tung1099.github.io)
 
    Cơ chế bảo mật: trang này KHÔNG tự kiểm tra mật khẩu. Mọi thao tác
    ghi đều đi qua GitHub API và được chính GitHub xác thực bằng token.
@@ -223,7 +266,7 @@ label{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-b
 
 const API = 'https://api.github.com';
 const FILE = 'posts.js';
-const DEFAULTS = { owner: 'gnutblog', repo: 'gnutblog.github.io', branch: 'main' };
+const DEFAULTS = { owner: 'tung1099', repo: 'tung1099.github.io', branch: 'main' };
 
 let S = {
   token: '', owner: '', repo: '', branch: 'main',
@@ -270,24 +313,40 @@ async function gh(path, opts){
 }
 
 /* ------------------------------ lưu trữ ------------------------------ */
+const LS = { cfg: 'blog-cfg', token: 'blog-token', theme: 'blog-theme' };
+
+/* Dọn cấu hình cũ (gnut-*) còn trỏ về gnutblog.github.io — nó ghi đè lên
+   DEFAULTS nên form đăng nhập cứ hiện lại repo cũ. Token thì giữ lại,
+   đúng nơi nó đang nằm, để không phải nhập lại. */
+function migrateOldSession(){
+  try{
+    const oldLocal = localStorage.getItem('gnut-token');
+    const oldSess  = sessionStorage.getItem('gnut-token');
+    if(oldLocal && !localStorage.getItem(LS.token))   localStorage.setItem(LS.token, oldLocal);
+    if(oldSess  && !sessionStorage.getItem(LS.token)) sessionStorage.setItem(LS.token, oldSess);
+    ['gnut-cfg','gnut-token'].forEach(k => { localStorage.removeItem(k); sessionStorage.removeItem(k); });
+  }catch(e){}
+}
+
 function saveSession(remember){
   const cfg = JSON.stringify({ owner: S.owner, repo: S.repo, branch: S.branch });
   try{
-    localStorage.setItem('gnut-cfg', cfg);
-    (remember ? localStorage : sessionStorage).setItem('gnut-token', S.token);
-    if(!remember) localStorage.removeItem('gnut-token');
+    localStorage.setItem(LS.cfg, cfg);
+    (remember ? localStorage : sessionStorage).setItem(LS.token, S.token);
+    if(!remember) localStorage.removeItem(LS.token);
   }catch(e){}
 }
 function loadSession(){
+  migrateOldSession();
   try{
-    const cfg = JSON.parse(localStorage.getItem('gnut-cfg') || 'null');
+    const cfg = JSON.parse(localStorage.getItem(LS.cfg) || 'null');
     if(cfg) Object.assign(S, cfg);
-    S.token = localStorage.getItem('gnut-token') || sessionStorage.getItem('gnut-token') || '';
+    S.token = localStorage.getItem(LS.token) || sessionStorage.getItem(LS.token) || '';
   }catch(e){}
 }
 function logout(){
   if(S.dirty && !confirm('Bài đang soạn chưa đăng sẽ mất. Vẫn đăng xuất?')) return;
-  try{ localStorage.removeItem('gnut-token'); sessionStorage.removeItem('gnut-token'); }catch(e){}
+  try{ localStorage.removeItem(LS.token); sessionStorage.removeItem(LS.token); }catch(e){}
   S = { token:'', owner:S.owner, repo:S.repo, branch:S.branch, user:null, posts:[], sha:null, editing:null, dirty:false };
   document.querySelectorAll('#who,#outBtn,#siteBtn').forEach(e => e.classList.add('hidden'));
   viewLogin();
@@ -425,7 +484,8 @@ function viewList(){
         + list.map(p =>
             '<div class="tr">'
             + '<div><div class="ti">' + esc2(p.title) + '</div><div class="sl">/#/bai/' + esc2(p.id) + '</div></div>'
-            + '<div><span class="cat">' + esc2(p.category || '—') + '</span></div>'
+            + '<div><span class="cat">' + esc2(p.topic || p.category || '—') + '</span>'
+              + (p.level ? '<span class="lvl">' + esc2(p.level) + '</span>' : '') + '</div>'
             + '<div class="dt">' + esc2(p.date || '') + '</div>'
             + '<div class="acts">'
               + '<button class="btn sm" onclick="window.open(\'index.html#/bai/' + esc2(p.id) + '\',\'_blank\')">Xem</button>'
@@ -456,13 +516,23 @@ async function removePost(id){
 }
 
 /* ============================ SOẠN THẢO ============================ */
-const CATS = ['Code', 'Cuộc sống'];
+const CATS   = ['Code', 'Cuộc sống'];
+const LEVELS = ['Fresher', 'Junior', 'Middle'];
+const TOPICS = ['Java core', 'Spring', 'Database & SQL', 'Kafka', 'Redis',
+                'Docker & CI/CD', 'Mạng máy tính', 'Hiệu năng', 'Công cụ', 'AI ứng dụng'];
+
+/* <option> có sẵn giá trị đang dùng kể cả khi nó không nằm trong danh sách */
+function opts(list, current, emptyLabel){
+  const all = list.concat(current && list.indexOf(current) === -1 ? [current] : []);
+  return (emptyLabel ? '<option value=""' + (current ? '' : ' selected') + '>— ' + emptyLabel + ' —</option>' : '')
+    + all.map(v => '<option value="' + esc2(v) + '"' + (v === current ? ' selected' : '') + '>' + esc2(v) + '</option>').join('');
+}
 
 function editPost(id){
   const p = id ? S.posts.find(x => x.id === id) : null;
   S.editing = p ? JSON.parse(JSON.stringify(p)) : {
     id: '', title: '', date: new Date().toISOString().slice(0,10),
-    category: 'Code', tags: [], summary: '', body: ''
+    category: 'Code', level: '', topic: '', tags: [], summary: '', body: ''
   };
   S.editing._orig = id || null;
   S.dirty = false;
@@ -471,8 +541,7 @@ function editPost(id){
 
 function renderEditor(){
   const e = S.editing;
-  const catOpts = CATS.concat(CATS.includes(e.category) || !e.category ? [] : [e.category])
-    .map(c => '<option value="' + esc2(c) + '"' + (c === e.category ? ' selected' : '') + '>' + esc2(c) + '</option>').join('');
+  const catOpts = opts(CATS, e.category, '');
 
   app.innerHTML =
     '<div class="head">'
@@ -488,6 +557,13 @@ function renderEditor(){
         + '<div class="hint">Link bài: <code>/#/bai/<span id="slugPrev">' + esc2(e.id) + '</span></code></div></div>'
       + '<div class="f"><label>Chuyên mục</label><select class="inp" id="f-cat">' + catOpts + '</select></div>'
       + '<div class="f"><label>Ngày đăng</label><input class="inp" id="f-date" type="date" value="' + esc2(e.date) + '"></div>'
+    + '</div>'
+
+    + '<div class="row c2">'
+      + '<div class="f"><label>Mức</label><select class="inp" id="f-level">' + opts(LEVELS, e.level || '', 'không gắn mức') + '</select>'
+        + '<div class="hint">Bài kiến thức thì chọn mức để nó hiện trên trang <b>Lộ trình</b>. Bài đời thường thì để trống.</div></div>'
+      + '<div class="f"><label>Chủ đề</label><select class="inp" id="f-topic">' + opts(TOPICS, e.topic || '', 'không gắn chủ đề') + '</select>'
+        + '<div class="hint">Quyết định bài nằm ở nhóm nào và mục &quot;Bài khác trong…&quot; cuối bài.</div></div>'
     + '</div>'
 
     + '<div class="f"><label>Thẻ (cách nhau bằng dấu phẩy)</label>'
@@ -508,8 +584,12 @@ function renderEditor(){
           + '<button class="mdbtn" onclick="wrap(\'[\',\'](https://)\')" title="Liên kết">link</button>'
           + '<button class="mdbtn" onclick="block(\'java\')" title="Khối mã Java">java</button>'
           + '<button class="mdbtn" onclick="block(\'\')" title="Khối mã">```</button>'
+          + '<button class="mdbtn" onclick="pickFile()" title="Tải ảnh lên repo (hoặc kéo-thả / dán thẳng vào ô soạn thảo)">ảnh</button>'
+          + '<button class="mdbtn" onclick="insertVideo()" title="Nhúng video YouTube / Vimeo">video</button>'
+          + '<button class="mdbtn" onclick="insertDiagram()" title="Vẽ biểu đồ bằng mermaid">biểu đồ</button>'
         + '</div></div>'
-        + '<textarea id="body" spellcheck="false" placeholder="Viết bài ở đây…">' + esc2(e.body) + '</textarea></div>'
+        + '<textarea id="body" spellcheck="false" placeholder="Viết bài ở đây… (kéo-thả hoặc dán ảnh vào đây để tải lên)">' + esc2(e.body) + '</textarea>'
+        + '<input type="file" id="filePick" accept="image/*,video/mp4,video/webm" multiple class="hidden"></div>'
       + '<div class="pane"><div class="pane-h">Xem trước</div><div class="prev" id="prev"></div></div>'
     + '</div>'
 
@@ -524,7 +604,7 @@ function renderEditor(){
   const mark = () => { S.dirty = true; setStatus('', 'Có thay đổi chưa đăng'); };
 
   ta.addEventListener('input', () => { renderPreview(); mark(); });
-  ['f-title','f-id','f-cat','f-date','f-tags','f-sum'].forEach(k => $(k).addEventListener('input', mark));
+  ['f-title','f-id','f-cat','f-date','f-tags','f-sum','f-level','f-topic'].forEach(k => $(k).addEventListener('input', mark));
 
   title.addEventListener('input', () => {
     if(!e._orig && !idf._touched){
@@ -543,6 +623,30 @@ function renderEditor(){
     if((ev.metaKey || ev.ctrlKey) && ev.key === 's'){ ev.preventDefault(); savePost(); }
   });
 
+  /* ----- chèn ảnh: chọn file, kéo-thả, hoặc dán thẳng (Cmd/Ctrl+V) ----- */
+  const pane = ta.closest('.pane');
+  $('filePick').addEventListener('change', ev => {
+    uploadFiles(ev.target.files);
+    ev.target.value = '';
+  });
+  ['dragenter','dragover'].forEach(k => ta.addEventListener(k, ev => {
+    if(!ev.dataTransfer || ev.dataTransfer.types.indexOf('Files') === -1) return;
+    ev.preventDefault(); pane.classList.add('drop');
+  }));
+  ['dragleave','dragend'].forEach(k => ta.addEventListener(k, () => pane.classList.remove('drop')));
+  ta.addEventListener('drop', ev => {
+    if(!ev.dataTransfer || !ev.dataTransfer.files.length) return;
+    ev.preventDefault(); pane.classList.remove('drop');
+    ta.focus();
+    uploadFiles(ev.dataTransfer.files);
+  });
+  ta.addEventListener('paste', ev => {
+    const files = Array.prototype.slice.call((ev.clipboardData || {}).files || []);
+    if(!files.length) return;
+    ev.preventDefault();
+    uploadFiles(files);
+  });
+
   renderPreview();
   window.scrollTo(0,0);
 }
@@ -551,6 +655,100 @@ function renderPreview(){
   const html = md($('body').value);
   $('prev').innerHTML = html || '<span style="color:var(--muted)">Xem trước sẽ hiện ở đây.</span>';
   highlightAll('.prev');
+  renderMermaid('.prev');
+  showLocalImages();
+}
+
+/* =====================================================================
+   TẢI ẢNH / VIDEO LÊN REPO
+   Ảnh được commit vào images/<năm>/ rồi chèn vào bài dưới dạng đường dẫn
+   tương đối — chạy đúng cả trên blog lẫn ở đây vì cả hai đều ở thư mục gốc.
+   ===================================================================== */
+const MAX_UPLOAD = 5 * 1024 * 1024;
+const EXT_BY_TYPE = {
+  'image/png':'.png', 'image/jpeg':'.jpg', 'image/gif':'.gif', 'image/webp':'.webp',
+  'image/svg+xml':'.svg', 'image/avif':'.avif', 'video/mp4':'.mp4', 'video/webm':'.webm'
+};
+/* ảnh vừa tải lên chưa kịp publish lên GitHub Pages (~1 phút), nên xem trước
+   tạm dùng bản dataURL còn trong bộ nhớ */
+const LOCAL_IMG = {};
+
+const fileToBase64 = f => new Promise((res, rej) => {
+  const r = new FileReader();
+  r.onload  = () => res(String(r.result).split(',')[1]);
+  r.onerror = () => rej(new Error('không đọc được file'));
+  r.readAsDataURL(f);
+});
+const fileToDataURL = f => new Promise(res => {
+  const r = new FileReader();
+  r.onload  = () => res(String(r.result));
+  r.onerror = () => res('');
+  r.readAsDataURL(f);
+});
+
+async function uploadFiles(fileList){
+  const files = Array.prototype.slice.call(fileList || [])
+    .filter(f => /^(image|video)\//.test(f.type));
+  if(!files.length) return toast('Chỉ nhận file ảnh hoặc video');
+  for(const f of files) await uploadOne(f);
+}
+
+async function uploadOne(file){
+  if(file.size > MAX_UPLOAD){
+    setStatus('err', 'File "' + file.name + '" nặng ' + (file.size/1048576).toFixed(1) + 'MB, quá mức 5MB. Nén nhỏ lại đã.');
+    return toast('File quá nặng');
+  }
+  const ext  = (/\.[a-z0-9]+$/i.exec(file.name) || [EXT_BY_TYPE[file.type] || ''])[0].toLowerCase();
+  const base = slugify(file.name.replace(/\.[^.]+$/, '')) || 'anh';
+  const path = 'images/' + new Date().getFullYear() + '/' + base + '-' + Date.now().toString(36) + ext;
+
+  setStatus('busy', 'Đang tải ' + file.name + ' lên GitHub…');
+  try{
+    const content = await fileToBase64(file);
+    await gh('/repos/' + S.owner + '/' + S.repo + '/contents/' + path, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: 'thêm ảnh: ' + path, content: content, branch: S.branch })
+    });
+    LOCAL_IMG[path] = await fileToDataURL(file);
+    insertAtCursor('\n![](' + path + ')\n');
+    setStatus('ok', 'Đã tải lên ' + path + ' — viết chú thích vào trong cặp ngoặc ![...] nếu muốn.');
+    toast('Đã chèn ' + (/^video\//.test(file.type) ? 'video' : 'ảnh'));
+  }catch(e){
+    setStatus('err', 'Không tải được "' + file.name + '": ' + e.message);
+    toast('Tải lên thất bại');
+  }
+}
+
+/* đổi src của ảnh vừa upload sang dataURL để xem trước không bị vỡ */
+function showLocalImages(){
+  document.querySelectorAll('#prev img, #prev video').forEach(el => {
+    const src = el.getAttribute('src') || '';
+    if(LOCAL_IMG[src]) el.src = LOCAL_IMG[src];
+  });
+}
+
+function pickFile(){ $('filePick').click(); }
+
+function insertAtCursor(text){
+  const ta = $('body');
+  const s = ta.selectionStart, e2 = ta.selectionEnd;
+  ta.setRangeText(text, s, e2, 'end');
+  ta.focus();
+  renderPreview();
+  S.dirty = true;
+}
+
+function insertVideo(){
+  const url = prompt('Dán link YouTube hoặc Vimeo:\n(ví dụ https://youtu.be/xxxx — có ?t=90 thì video tự tua tới giây 90)');
+  if(!url) return;
+  const u = url.trim();
+  if(!/^https?:\/\/\S+$/.test(u)) return toast('Link không hợp lệ');
+  insertAtCursor('\n' + u + '\n');
+}
+
+function insertDiagram(){
+  insertAtCursor('\n```mermaid\nflowchart LR\n  A[Client] --> B[Spring Boot]\n  B --> C[(PostgreSQL)]\n  B --> D[(Redis)]\n```\n');
 }
 
 /* ----- công cụ chèn Markdown ----- */
@@ -592,21 +790,24 @@ function savePost(){
   if(!id)    return toast('Chưa có đường dẫn (slug)');
   if(!$('body').value.trim()) return toast('Bài chưa có nội dung');
 
-  const trung = S.posts.some(p => p.id === id && p.id !== e._orig);
-  if(trung) return toast('Đường dẫn "' + id + '" đã có bài khác dùng');
+  const duplicate = S.posts.some(p => p.id === id && p.id !== e._orig);
+  if(duplicate) return toast('Đường dẫn "' + id + '" đã có bài khác dùng');
 
   const post = {
     id: id,
     title: title,
     date: $('f-date').value || new Date().toISOString().slice(0,10),
-    category: $('f-cat').value,
-    tags: $('f-tags').value.split(',').map(t => t.trim()).filter(Boolean),
-    summary: $('f-sum').value.trim(),
-    body: $('body').value
+    category: $('f-cat').value
   };
+  /* để trống thì không ghi field vào file cho gọn */
+  if($('f-level').value) post.level = $('f-level').value;
+  if($('f-topic').value) post.topic = $('f-topic').value;
+  post.tags    = $('f-tags').value.split(',').map(t => t.trim()).filter(Boolean);
+  post.summary = $('f-sum').value.trim();
+  post.body    = $('body').value;
 
-  const laBaiMoi = !e._orig;
-  if(laBaiMoi){
+  const isNew = !e._orig;
+  if(isNew){
     S.posts.unshift(post);
   }else{
     const i = S.posts.findIndex(p => p.id === e._orig);
@@ -615,7 +816,7 @@ function savePost(){
   e._orig = id;
   $('pubBtn').disabled = true;
 
-  publish((laBaiMoi ? 'bài mới: ' : 'sửa bài: ') + title, () => {
+  publish((isNew ? 'bài mới: ' : 'sửa bài: ') + title, () => {
     $('pubBtn').disabled = false;
     setTimeout(() => { S.editing = null; viewList(); }, 900);
   });
@@ -630,8 +831,8 @@ window.addEventListener('beforeunload', ev => {
 (async function init(){
   try{
     document.documentElement.setAttribute('data-theme',
-      localStorage.getItem('gnut-theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'));
-  }catch(e){ document.documentElement.setAttribute('data-theme','dark'); }
+      localStorage.getItem(LS.theme) || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+  }catch(e){ document.documentElement.setAttribute('data-theme','light'); }
 
   loadSession();
   if(S.token && S.owner && S.repo){

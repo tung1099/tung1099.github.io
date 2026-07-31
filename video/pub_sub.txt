@@ -1,0 +1,14 @@
+Pub/Sub: Xương sống của kiến trúc Event-Driven
+Một trong những sai lầm phổ biến khi thiết kế hệ thống là để các service phụ thuộc trực tiếp vào nhau.
+Ví dụ, sau khi tạo đơn hàng, nếu dịch vụ Order phải chờ Email gửi xong, rồi mới trả kết quả cho người dùng thì chỉ cần Email gặp sự cố là toàn bộ luồng xử lý cũng bị ảnh hưởng.
+Đó là lý do mô hình Publish/Subscribe (Pub/Sub) ra đời.
+Thay vì gọi trực tiếp (Direct Call), dịch vụ Order chỉ cần publish một sự kiện như "OrderCreated" lên một Topic thông qua Message Broker. Nó không cần biết ai sẽ nhận, có bao nhiêu người đang nhận hay họ xử lý ra sao.
+Kết quả là hệ thống có được rất nhiều lợi ích:
+- Order chỉ cần thông báo: "Có đơn hàng mới." Các service như Email, Invoice, Inventory, Analytics... sẽ tự lắng nghe và xử lý phần việc của mình.
+- Muốn bổ sung một service gửi thông báo, tạo báo cáo doanh thu hay đồng bộ CRM? Chỉ cần tạo thêm một Subscriber mới. Không cần chỉnh sửa code của Order Service.
+- Nếu Email Service tạm thời bị lỗi, các service khác vẫn tiếp tục hoạt động bình thường. Broker sẽ lưu lại message và gửi lại khi Email Service khôi phục.
+Queue và Topic khác nhau như thế nào? Đây là điểm nhiều người mới học dễ nhầm nhất.
+- Message Queue: Một message sẽ chỉ được một consumer duy nhất xử lý. Hãy tưởng tượng như lấy số ở quầy giao dịch: mỗi số chỉ có một nhân viên phục vụ.
+- Pub/Sub Topic Một message sẽ được phân phối đến tất cả Subscriber đã đăng ký. Giống như một chương trình phát thanh: mọi người đang bật đúng kênh đều sẽ nghe cùng một nội dung.
+Pub/Sub chính là nền tảng của rất nhiều hệ thống Event-Driven hiện đại.
+Nếu muốn xây dựng những hệ thống có khả năng mở rộng và xử lý bất đồng bộ như Base, Odoo hay các nền tảng quy mô lớn khác, hãy dành thời gian tìm hiểu các Message Broker như Kafka, RabbitMQ ... Đây là một trong những kỹ năng quan trọng mà Vibe Coder tay ngang thường không hề hay biết.
