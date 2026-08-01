@@ -644,6 +644,25 @@ function countView(path){
 /* =============================================================
    ĐỊNH TUYẾN — mỗi bài có link riêng chia sẻ được
    ============================================================= */
+/* Facebook, Google, Instagram… gắn thêm tham số theo dõi vào link ra ngoài
+   (?fbclid=…, ?gclid=…). Chúng vô hại với trang này — route() chỉ đọc hash,
+   còn bộ đếm thì tự dựng path nên số liệu không bị ảnh hưởng — nhưng làm bẩn
+   thanh địa chỉ và lan sang link mà người đọc copy đi tiếp.
+
+   Dùng replaceState nên không thêm mục nào vào lịch sử (bấm Back vẫn về đúng
+   trang trước, không kẹt lại ở chính trang này) và không tải lại trang. */
+const TRACK_PARAMS = ['fbclid','gclid','igshid','twclid','msclkid','mc_eid','_ga','ref_src','ref_url'];
+
+function cleanUrl(){
+  if(!location.search || !history.replaceState) return;
+  const p = new URLSearchParams(location.search);
+  const bo = TRACK_PARAMS.concat([...p.keys()].filter(k => k.startsWith('utm_')));
+  if(!bo.some(k => p.has(k))) return;      /* không có gì để xoá thì đừng đụng vào */
+  bo.forEach(k => p.delete(k));
+  const qs = p.toString();
+  history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
+}
+
 function nav(route){
   location.hash = '#/' + route;
   if(!route) window.scrollTo(0,0);
@@ -743,6 +762,7 @@ function toggleTheme(){
       + '<code>python3 -m http.server 8000</code><br>rồi mở <code>http://localhost:8000</code></div>';
   }
 
+  cleanUrl();
   loadCounter();
   window.addEventListener('hashchange', route);
   window.addEventListener('load', highlight);
