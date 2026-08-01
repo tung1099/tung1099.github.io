@@ -1,0 +1,3 @@
+Understand SQL’s logical processing order—not just the order it is written.
+This example shows how FROM, WHERE, GROUP BY, HAVING, SELECT, ORDER BY, and LIMIT are logically processed.
+Save this for your SQL revision.

@@ -70,6 +70,10 @@ window.ROADMAP = [
             "title": "GROUP BY và các hàm tổng hợp"
           },
           {
+            "slug": "thu-tu-thuc-thi-cua-sql",
+            "title": "SQL chạy theo thứ tự nào"
+          },
+          {
             "slug": "index-la-gi",
             "title": "Index là gì và khi nào nên tạo"
           },
@@ -283,6 +287,35 @@ window.ROADMAP = [
           {
             "slug": "cors-vi-sao-luon-loi",
             "title": "CORS và vì sao nó luôn lỗi"
+          }
+        ]
+      },
+      {
+        "topic": "Bảo mật",
+        "items": [
+          {
+            "slug": "xac-thuc-va-phan-quyen",
+            "title": "Xác thực và phân quyền khác nhau chỗ nào"
+          },
+          {
+            "slug": "jwt-cau-truc-va-cai-bay",
+            "title": "JWT: cấu trúc và những cái bẫy"
+          },
+          {
+            "slug": "access-token-va-refresh-token",
+            "title": "Access token và refresh token"
+          },
+          {
+            "slug": "spring-security-filter-chain",
+            "title": "Filter chain của Spring Security"
+          },
+          {
+            "slug": "luu-token-o-dau-cho-an-toan",
+            "title": "Lưu token ở đâu cho an toàn"
+          },
+          {
+            "slug": "bam-mat-khau-va-bcrypt",
+            "title": "Băm mật khẩu: BCrypt và salt"
           }
         ]
       },
