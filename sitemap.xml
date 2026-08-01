@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Blog đang định tuyến bằng dấu # (#/post/…). Phần sau dấu # không phải là một
+  URL riêng đối với công cụ tìm kiếm, nên sitemap chỉ khai báo được trang gốc.
+  Muốn từng bài có mặt trong sitemap thì phải bỏ hash và sinh file HTML tĩnh
+  cho mỗi bài — xem ghi chú trong index.html.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://tung1099.github.io/</loc>
+    <lastmod>2026-08-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>

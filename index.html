@@ -10,7 +10,11 @@
 <meta property="og:title" content="Blog cá nhân">
 <meta property="og:description" content="Blog cá nhân — kiến thức code (Java, Spring, AI) và chuyện đời thường.">
 <meta property="og:url" content="https://tung1099.github.io/">
+<meta property="og:image" content="https://tung1099.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#b45309">
 <link rel="canonical" href="https://tung1099.github.io/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23b45309'/%3E%3Ctext x='16' y='24' font-size='21' font-family='Georgia,serif' fill='%23fdfcfa' text-anchor='middle'%3EB%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -75,7 +79,7 @@ header{
 .logo .b{color:var(--accent)}
 header nav{display:flex;gap:2px;align-items:center}
 .nb{
-  background:none;border:none;cursor:pointer;color:var(--muted);font:inherit;
+  display:inline-block;background:none;border:none;cursor:pointer;color:var(--muted);font:inherit;
   font-size:14px;font-weight:500;padding:7px 12px;border-radius:8px;transition:.15s;white-space:nowrap;
 }
 .nb:hover{background:var(--accent-bg);color:var(--accent)}
@@ -127,15 +131,16 @@ main{max-width:820px;margin:0 auto;padding:48px 22px 100px;min-height:70vh}
 
 /* ---------- danh sách bài ---------- */
 .plist{display:flex;flex-direction:column}
-.pcard{padding:24px 0;border-bottom:1px solid var(--line);cursor:pointer;transition:.15s}
+.pcard{display:block;color:inherit;padding:24px 0;border-bottom:1px solid var(--line);cursor:pointer;transition:.15s}
 .pcard:first-child{border-top:1px solid var(--line)}
 .pcard:hover h2{color:var(--accent)}
 .pmeta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-bottom:8px}
 .pmeta .dot{opacity:.45}
 .cat{
-  font-size:12px;font-weight:600;color:var(--accent);background:var(--accent-bg);
+  display:inline-block;font-size:12px;font-weight:600;color:var(--accent);background:var(--accent-bg);
   padding:2px 10px;border-radius:20px;
 }
+a.cat:hover{background:var(--accent);color:#fff}
 .pcard h2{font-family:var(--f-serif);font-size:22px;font-weight:600;letter-spacing:-.01em;line-height:1.35;margin-bottom:7px;transition:.15s}
 .pcard .sum{color:var(--muted);font-size:15px;line-height:1.65}
 .ptags{display:flex;gap:6px;margin-top:11px;flex-wrap:wrap}
@@ -274,6 +279,7 @@ figure.dgm{
 .sbtn:hover{border-color:var(--accent);color:var(--accent)}
 .nextprev{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .np{
+  display:block;color:inherit;
   border:1px solid var(--line);border-radius:11px;padding:15px 17px;cursor:pointer;
   transition:.15s;background:var(--surface);box-shadow:var(--shadow);
 }
@@ -287,9 +293,10 @@ figure.dgm{
 .same{max-width:68ch;margin-top:40px;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:18px 20px;box-shadow:var(--shadow)}
 .same .t{font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
 .same ul{list-style:none;display:flex;flex-direction:column;gap:10px}
-.same li{display:flex;gap:10px;align-items:baseline;font-size:14.5px;line-height:1.5;cursor:pointer}
+.same li{display:flex;gap:10px;align-items:baseline;font-size:14.5px;line-height:1.5}
+.same li a{color:inherit;cursor:pointer}
 .same li::before{content:'●';color:var(--accent);flex:none;font-size:12px}
-.same li:hover{color:var(--accent)}
+.same li a:hover{color:var(--accent)}
 .same .more{margin-top:14px;font-size:13.5px;color:var(--accent);cursor:pointer;font-weight:500}
 .same .more:hover{text-decoration:underline}
 
@@ -338,10 +345,10 @@ footer a:hover{color:var(--accent)}
   <div class="bar">
     <a class="logo" href="#/" onclick="nav('')">Blog <span class="b">cá nhân</span></a>
     <nav>
-      <button class="nb" data-r="" onclick="nav('')">Tất cả</button>
-      <button class="nb" data-r="category/code" onclick="nav('category/code')">Code</button>
-      <button class="nb" data-r="category/life" onclick="nav('category/life')">Cuộc sống</button>
-      <button class="nb" data-r="about" onclick="nav('about')">Giới thiệu</button>
+      <a class="nb" data-r="" href="#/">Tất cả</a>
+      <a class="nb" data-r="category/code" href="#/category/code">Code</a>
+      <a class="nb" data-r="category/life" href="#/category/life">Cuộc sống</a>
+      <a class="nb" data-r="about" href="#/about">Giới thiệu</a>
       <button class="ib" id="themeBtn" onclick="toggleTheme()" title="Sáng / tối"></button>
     </nav>
   </div>
@@ -363,6 +370,10 @@ footer a:hover{color:var(--accent)}
    CẤU HÌNH — sửa thông tin của bạn ở đây
    ============================================================= */
 const SITE = {
+  origin: "https://tung1099.github.io/",
+  /* Mã site GoatCounter — phần đứng trước ".goatcounter.com" khi bạn đăng ký.
+     Để trống thì không nạp script và không đếm gì cả. */
+  goatcounter: "",
   name: "Blog cá nhân",
   kicker: "// ghi lại trước khi quên",
   title: "Kiến thức code và vài chuyện đời thường",
@@ -411,6 +422,15 @@ function setMeta(title, desc){
   set('meta[name="description"]', desc);
   set('meta[property="og:title"]', title);
   set('meta[property="og:description"]', desc);
+
+  /* Địa chỉ hiện tại, kể cả phần sau dấu #. Lưu ý: bot của Facebook/X không
+     nhận được phần sau dấu # nên vẫn đọc thẻ tĩnh trong <head>; chỗ này chỉ
+     đúng với công cụ chạy được JavaScript. */
+  const h = location.hash.replace(/^#\/?$/, '');   /* trang chủ thì để địa chỉ trần, không kèm "#/" */
+  const url = SITE.origin + h;
+  set('meta[property="og:url"]', url);
+  const canon = document.querySelector('link[rel="canonical"]');
+  if(canon) canon.setAttribute('href', url);
 }
 
 /* =============================================================
@@ -427,13 +447,13 @@ function badges(p){
 }
 
 function cardHTML(p){
-  return '<div class="pcard" onclick="nav(\'post/'+p.id+'\')">'
+  return '<a class="pcard" href="#/post/'+p.id+'">'
     + '<div class="pmeta">'+badges(p)+'<span class="dot">·</span>'
     + '<span>'+fmtDate(p.date)+'</span><span class="dot">·</span><span>'+readTime(p.body)+'</span></div>'
     + '<h2>'+esc(p.title)+'</h2>'
     + '<p class="sum">'+esc(p.summary||'')+'</p>'
     + ((p.tags&&p.tags.length) ? '<div class="ptags">'+p.tags.map(t=>'<span class="ptag">#'+esc(t)+'</span>').join('')+'</div>' : '')
-    + '</div>';
+    + '</a>';
 }
 
 function chipRow(label, values, active, handler){
@@ -483,6 +503,7 @@ function viewList(category){
     const n = document.getElementById('q');
     n.focus(); n.setSelectionRange(n.value.length, n.value.length);
   };
+  window.scrollTo(0,0);
   setProgress();
 }
 
@@ -512,7 +533,7 @@ function sameTopicBox(p, all){
   const shown = items.slice(0, 8);
   return '<div class="same">'
     + '<div class="t">Cùng chủ đề ' + esc(p.topic) + '</div><ul>'
-    + shown.map(it => '<li onclick="nav(\'post/'+it.id+'\')">'+esc(it.title)+'</li>').join('')
+    + shown.map(it => '<li><a href="#/post/'+it.id+'">'+esc(it.title)+'</a></li>').join('')
     + '</ul>'
     + (items.length > shown.length
         ? '<div class="more" onclick="goTopic(\''+p.topic.replace(/'/g,"\\'")+'\')">Xem tất cả bài chủ đề này →</div>' : '')
@@ -536,12 +557,12 @@ function viewPost(id){
   const topicBox = sameTopicBox(p, all);
 
   app.innerHTML =
-    '<div class="back" onclick="nav(\'\')">← Tất cả bài viết</div>'
+    '<a class="back" href="#/">← Tất cả bài viết</a>'
     + '<article>'
       + '<div class="pmeta">'
       + (p.topic
           ? '<span class="topic" style="cursor:pointer" onclick="goTopic(\''+p.topic.replace(/'/g,"\\'")+'\')"><b>'+esc(p.topic)+'</b></span>'
-          : '<span class="cat" style="cursor:pointer" onclick="nav(\'category/'+catSlug(p.category)+'\')">'+esc(p.category||'')+'</span>')
+          : '<a class="cat" href="#/category/'+catSlug(p.category)+'">'+esc(p.category||'')+'</a>')
       + '<span class="dot">·</span>'
       + '<span>'+fmtDate(p.date)+'</span><span class="dot">·</span><span>'+readTime(p.body)+'</span></div>'
       + '<h1>'+esc(p.title)+'</h1>'
@@ -557,8 +578,8 @@ function viewPost(id){
         + '<button class="sbtn" onclick="window.open(\'https://twitter.com/intent/tweet?url=\'+encodeURIComponent(location.href)+\'&text=\'+encodeURIComponent(document.title),\'_blank\')">X</button>'
       + '</div>'
       + '<div class="nextprev">'
-        + (older ? '<div class="np" onclick="nav(\'post/'+older.id+'\')"><div class="lbl">← Bài cũ hơn</div><div class="t">'+esc(older.title)+'</div></div>' : '<div></div>')
-        + (newer ? '<div class="np r" onclick="nav(\'post/'+newer.id+'\')"><div class="lbl">Bài mới hơn →</div><div class="t">'+esc(newer.title)+'</div></div>' : '<div></div>')
+        + (older ? '<a class="np" href="#/post/'+older.id+'"><div class="lbl">← Bài cũ hơn</div><div class="t">'+esc(older.title)+'</div></a>' : '<div></div>')
+        + (newer ? '<a class="np r" href="#/post/'+newer.id+'"><div class="lbl">Bài mới hơn →</div><div class="t">'+esc(newer.title)+'</div></a>' : '<div></div>')
       + '</div>'
     + '</div>';
 
@@ -582,6 +603,39 @@ function viewAbout(){
 function copyLink(){
   navigator.clipboard.writeText(location.href)
     .then(() => toast('Đã copy link bài viết'), () => toast('Trình duyệt không cho copy'));
+}
+
+/* =============================================================
+   ĐẾM LƯỢT TRUY CẬP (GoatCounter)
+
+   Trang này định tuyến bằng dấu #, mà GoatCounter chỉ nhìn thấy phần trước
+   dấu # — để mặc định thì cả 13 bài bị gộp thành một dòng "/". Nên ta tắt
+   đếm tự động (no_onload) rồi tự gọi count() ở cuối route(), với đường dẫn
+   dựng lại từ hash: /post/…, /category/…, /about.
+   ============================================================= */
+function loadCounter(){
+  if(!SITE.goatcounter) return;
+  window.goatcounter = { no_onload: true };
+  const s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://gc.zgo.at/count.js';
+  s.setAttribute('data-goatcounter', 'https://' + SITE.goatcounter + '.goatcounter.com/count');
+  document.head.appendChild(s);
+}
+
+/* Lọc theo thẻ / chủ đề cũng gọi lại route() mà không đổi hash. Nhớ đường dẫn
+   đã đếm để một lượt đọc không bị cộng thành năm. */
+let _counted = null;
+function countView(path){
+  if(!SITE.goatcounter || path === _counted) return;
+  _counted = path;
+  let tries = 0;
+  const t = setInterval(() => {
+    if(window.goatcounter && window.goatcounter.count){
+      clearInterval(t);
+      window.goatcounter.count({ path: path, title: document.title });
+    }else if(++tries > 50) clearInterval(t);   /* 5 giây không nạp nổi thì bỏ */
+  }, 100);
 }
 
 /* =============================================================
@@ -627,6 +681,8 @@ function route(){
   else if(h.startsWith('category/')) viewList(catFromSlug(h.slice(9)));
   else if(h === 'about')             viewAbout();
   else                               viewList('');
+
+  countView('/' + h);   /* sau khi render, để document.title đã đúng */
 }
 
 /* =============================================================
@@ -672,6 +728,7 @@ function toggleTheme(){
       + '<code>python3 -m http.server 8000</code><br>rồi mở <code>http://localhost:8000</code></div>';
   }
 
+  loadCounter();
   window.addEventListener('hashchange', route);
   window.addEventListener('load', highlight);
   window.addEventListener('scroll', setProgress, {passive:true});

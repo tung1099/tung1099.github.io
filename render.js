@@ -22,6 +22,15 @@ function slugify(s){
     .replace(/-+/g, '-').replace(/^-|-$/g, '');
 }
 
+/* Chỉ cho phép link tới http(s), đường dẫn tương đối, neo trong trang và mailto.
+   Chặn javascript:, data:, vbscript: — chúng biến một link trong bài thành mã
+   chạy trên chính origin của blog, nơi trang quản trị để token GitHub. */
+function safeUrl(url){
+  const s = String(url).replace(/[\u0000-\u0020]/g, '');   /* bỏ ký tự trắng chèn giữa scheme */
+  if(/^[a-z][a-z0-9+.-]*:/i.test(s)) return /^(https?|mailto):/i.test(s);
+  return true;   /* không có scheme thì là đường dẫn tương đối hoặc #neo */
+}
+
 function inline(t){
   const codes = [];
   let s = esc(t).replace(/`([^`]+)`/g, (_, c) => {
@@ -31,6 +40,7 @@ function inline(t){
   s = s
     .replace(/!\[([^\]]*)\]\(([^)\s]+)[^)]*\)/g, '<img src="$2" alt="$1" loading="lazy">')
     .replace(/\[([^\]]+)\]\(([^)\s]+)[^)]*\)/g, (m, txt, url) => {
+      if(!safeUrl(url)) return txt;
       const ext = /^https?:\/\//.test(url) ? ' target="_blank" rel="noopener noreferrer"' : '';
       return '<a href="' + url + '"' + ext + '>' + txt + '</a>';
     })

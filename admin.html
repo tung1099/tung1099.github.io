@@ -129,6 +129,19 @@ label{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-b
 .acts{display:flex;gap:6px;justify-content:flex-end}
 .empty{padding:56px 20px;text-align:center;color:var(--muted);font-size:14px}
 
+/* ---------- thống kê lượt truy cập ---------- */
+.stat-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+.stat{
+  flex:1;min-width:170px;border:1px solid var(--line);border-radius:12px;
+  padding:16px 18px;background:var(--surface);box-shadow:var(--shadow);
+}
+.stat .n{font-family:var(--f-serif);font-size:30px;font-weight:600;line-height:1.1}
+.stat .k{font-size:12.5px;color:var(--muted);margin-top:4px}
+.st-tbl .tr{grid-template-columns:1fr 92px}
+.st-tbl .pth{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);margin-top:3px}
+.st-tbl .num{font-family:var(--f-mono);font-size:14px;text-align:right}
+.st-bar{height:4px;border-radius:20px;background:var(--accent);margin-top:6px;min-width:3px}
+
 /* ---------- trình soạn thảo ---------- */
 .edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
 .pane{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface);box-shadow:var(--shadow)}
@@ -244,6 +257,7 @@ label{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-b
     <span class="badge">quản trị</span>
     <div class="spacer"></div>
     <div class="who hidden" id="who"></div>
+    <button class="btn sm hidden" id="statsBtn" onclick="viewStats()">Lượt truy cập</button>
     <button class="btn sm hidden" id="siteBtn" onclick="window.open('index.html','_blank')">Xem blog ↗</button>
     <button class="btn sm hidden" id="outBtn" onclick="logout()">Đăng xuất</button>
   </div>
@@ -312,7 +326,8 @@ async function gh(path, opts){
 }
 
 /* ------------------------------ lưu trữ ------------------------------ */
-const LS = { cfg: 'blog-cfg', token: 'blog-token', theme: 'blog-theme' };
+const LS = { cfg: 'blog-cfg', token: 'blog-token', theme: 'blog-theme',
+             gcCode: 'blog-gc-code', gcToken: 'blog-gc-token' };
 
 /* Dọn cấu hình cũ (gnut-*) còn trỏ về gnutblog.github.io — nó ghi đè lên
    DEFAULTS nên form đăng nhập cứ hiện lại repo cũ. Token thì giữ lại,
@@ -347,7 +362,7 @@ function logout(){
   if(S.dirty && !confirm('Bài đang soạn chưa đăng sẽ mất. Vẫn đăng xuất?')) return;
   try{ localStorage.removeItem(LS.token); sessionStorage.removeItem(LS.token); }catch(e){}
   S = { token:'', owner:S.owner, repo:S.repo, branch:S.branch, user:null, posts:[], sha:null, editing:null, dirty:false };
-  document.querySelectorAll('#who,#outBtn,#siteBtn').forEach(e => e.classList.add('hidden'));
+  document.querySelectorAll('#who,#outBtn,#siteBtn,#statsBtn').forEach(e => e.classList.add('hidden'));
   viewLogin();
 }
 
@@ -414,7 +429,7 @@ async function doLogin(){
 function showUser(){
   $('who').innerHTML = '<img src="' + esc2(S.user.avatar_url) + '" alt=""><span>'
     + esc2(S.user.login) + ' · ' + esc2(S.owner + '/' + S.repo) + '</span>';
-  document.querySelectorAll('#who,#outBtn,#siteBtn').forEach(e => e.classList.remove('hidden'));
+  document.querySelectorAll('#who,#outBtn,#siteBtn,#statsBtn').forEach(e => e.classList.remove('hidden'));
 }
 
 /* ============================ ĐỌC / GHI DỮ LIỆU ============================ */
@@ -468,6 +483,143 @@ async function publish(message, after){
       setStatus('err', 'Lỗi: ' + e.message);
     }
     toast('Không đăng được');
+  }
+}
+
+/* ======================= LƯỢT TRUY CẬP (GoatCounter) =======================
+   GitHub Pages là hosting tĩnh nên không tự đếm được; số liệu lấy từ API của
+   GoatCounter. API của họ có CORS (Access-Control-Allow-Origin: *) nên gọi
+   thẳng từ đây được, không cần máy chủ trung gian.
+
+   Khoá API lưu trong localStorage giống token GitHub. Hãy tạo khoá chỉ với
+   quyền "Read statistics" — nó không sửa được gì, và cũng không đụng tới repo.
+   ========================================================================= */
+const GC = {
+  get code(){ return localStorage.getItem(LS.gcCode) || ''; },
+  get token(){ return localStorage.getItem(LS.gcToken) || ''; },
+  save(code, token){
+    localStorage.setItem(LS.gcCode, code.trim());
+    localStorage.setItem(LS.gcToken, token.trim());
+  },
+  clear(){ localStorage.removeItem(LS.gcCode); localStorage.removeItem(LS.gcToken); }
+};
+
+async function gcGet(path, params){
+  const qs = new URLSearchParams(params || {}).toString();
+  const r = await fetch('https://' + GC.code + '.goatcounter.com/api/v0' + path + (qs ? '?' + qs : ''), {
+    headers: { 'Authorization': 'Bearer ' + GC.token, 'Content-Type': 'application/json' }
+  });
+  if(!r.ok){
+    const t = await r.text().catch(() => '');
+    const e = new Error(r.status === 401 || r.status === 403
+      ? 'Khoá API bị từ chối. Kiểm tra lại mã site và khoá.'
+      : 'GoatCounter trả về ' + r.status + ' ' + t.slice(0, 120));
+    e.status = r.status;
+    throw e;
+  }
+  return r.json();
+}
+
+/* Màn hình cấu hình, hiện khi chưa khai báo mã site / khoá API */
+function viewStatsSetup(err){
+  app.innerHTML =
+    '<div class="head"><h1>Lượt truy cập</h1>'
+    + '<button class="btn sm" onclick="viewList()">← Về danh sách bài</button></div>'
+    + '<div class="card" style="max-width:560px">'
+      + (err ? '<div class="err">' + esc2(err) + '</div>' : '')
+      + '<div class="f"><label>Mã site GoatCounter</label>'
+        + '<input class="inp" id="gc-code" placeholder="tung1099" value="' + esc2(GC.code) + '">'
+        + '<div class="hint">Phần đứng trước <code>.goatcounter.com</code>. Đăng ký miễn phí tại '
+        + '<a href="https://www.goatcounter.com/signup" target="_blank" rel="noopener">goatcounter.com/signup</a>.</div></div>'
+      + '<div class="f"><label>Khoá API</label>'
+        + '<input class="inp" id="gc-token" type="password" placeholder="dán khoá vào đây" value="' + esc2(GC.token) + '">'
+        + '<div class="hint">Tạo ở <b>GoatCounter → tên bạn ở menu trên → API</b>. '
+        + 'Chỉ cần tick quyền <b>Read statistics</b>, đừng cấp thêm gì khác.</div></div>'
+      + '<button class="btn pri" onclick="saveStatsCfg()">Lưu và xem số liệu</button>'
+      + (GC.code ? ' <button class="btn dan" onclick="GC.clear();viewStatsSetup()">Xoá khoá</button>' : '')
+      + '<div class="note">Sau khi đăng ký xong, nhớ mở <code>index.html</code> và điền mã site vào '
+      + '<code>SITE.goatcounter</code> — đó mới là chỗ bật việc đếm. Bảng này chỉ đọc số liệu.</div>'
+    + '</div>';
+}
+
+function saveStatsCfg(){
+  const code = $('gc-code').value.trim(), token = $('gc-token').value.trim();
+  if(!code || !token) return viewStatsSetup('Điền đủ mã site và khoá API.');
+  GC.save(code, token);
+  viewStats();
+}
+
+/* Đổi đường dẫn GoatCounter ghi được thành tiêu đề bài cho dễ đọc */
+function labelFor(path){
+  const m = /^\/post\/(.+)$/.exec(path);
+  if(m){
+    const p = S.posts.find(x => x.id === m[1]);
+    if(p) return p.title;
+  }
+  if(path === '/' || path === '') return 'Trang chủ';
+  if(path === '/about')           return 'Giới thiệu';
+  const c = /^\/category\/(.+)$/.exec(path);
+  if(c) return 'Chuyên mục: ' + c[1];
+  return path;
+}
+
+const DAYS = [7, 30, 365];
+let statsDays = 30;
+
+async function viewStats(days){
+  if(days) statsDays = days;
+  if(!GC.code || !GC.token) return viewStatsSetup();
+
+  app.innerHTML =
+    '<div class="head"><h1>Lượt truy cập</h1>'
+    + '<button class="btn sm" onclick="viewList()">← Về danh sách bài</button></div>'
+    + '<div class="empty">Đang tải số liệu…</div>';
+
+  const start = new Date(Date.now() - statsDays * 864e5).toISOString().slice(0, 10);
+  try{
+    const [tot, hits] = await Promise.all([
+      gcGet('/stats/total', { start: start }),
+      gcGet('/stats/hits',  { start: start, limit: 50 })
+    ]);
+
+    const rows = (hits.hits || []).slice().sort((a, b) => b.count - a.count);
+    const max  = rows.length ? rows[0].count : 1;
+    const posts = rows.filter(h => h.path.startsWith('/post/'));
+
+    app.innerHTML =
+      '<div class="head"><h1>Lượt truy cập</h1>'
+      + DAYS.map(d => '<button class="btn sm' + (d === statsDays ? ' pri' : '') + '" onclick="viewStats(' + d + ')">'
+          + (d === 365 ? '1 năm' : d + ' ngày') + '</button>').join('')
+      + '<button class="btn sm" onclick="viewStatsSetup()">Cấu hình</button>'
+      + '<button class="btn sm" onclick="viewList()">← Về danh sách bài</button></div>'
+
+      + '<div class="stat-row">'
+        + '<div class="stat"><div class="n">' + (tot.total || 0).toLocaleString('vi-VN') + '</div>'
+          + '<div class="k">lượt truy cập, ' + statsDays + ' ngày qua</div></div>'
+        + '<div class="stat"><div class="n">' + posts.reduce((a, h) => a + h.count, 0).toLocaleString('vi-VN') + '</div>'
+          + '<div class="k">lượt đọc bài viết</div></div>'
+        + '<div class="stat"><div class="n">' + posts.length + '</div>'
+          + '<div class="k">bài có người đọc</div></div>'
+      + '</div>'
+
+      + (rows.length
+        ? '<div class="tbl st-tbl"><div class="tr h"><div>Trang</div><div style="text-align:right">Lượt</div></div>'
+          + rows.map(h =>
+              '<div class="tr"><div><div class="ti" style="font-size:15px">' + esc2(labelFor(h.path)) + '</div>'
+              + '<div class="pth">' + esc2(h.path) + '</div>'
+              + '<div class="st-bar" style="width:' + Math.max(3, Math.round(h.count / max * 100)) + '%"></div></div>'
+              + '<div class="num">' + h.count.toLocaleString('vi-VN') + '</div></div>').join('')
+          + '</div>'
+        : '<div class="tbl"><div class="empty">Chưa có lượt truy cập nào trong khoảng này.<br><br>'
+          + 'Nếu bạn vừa gắn bộ đếm thì chờ vài phút, và nhớ kiểm tra <code>SITE.goatcounter</code> '
+          + 'trong <code>index.html</code> đã điền mã site chưa.</div></div>')
+
+      + '<div class="note" style="margin-top:18px">Số liệu do GoatCounter đếm phía trình duyệt nên '
+      + '<b>thấp hơn thực tế</b> — khách dùng trình chặn quảng cáo sẽ không được tính. '
+      + 'Xem đầy đủ tại <a href="https://' + esc2(GC.code) + '.goatcounter.com" target="_blank" rel="noopener">'
+      + esc2(GC.code) + '.goatcounter.com ↗</a></div>';
+  }catch(e){
+    viewStatsSetup(e.message);
   }
 }
 

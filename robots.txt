@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Trang quản trị: không có gì bí mật ở đây (token do trình duyệt giữ, GitHub
+# xác thực phía máy chủ) nhưng cũng không có lý do gì để nó nằm trong kết quả
+# tìm kiếm.
+Disallow: /admin.html
+
+Sitemap: https://tung1099.github.io/sitemap.xml
