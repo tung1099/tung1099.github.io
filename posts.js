@@ -1,7 +1,7 @@
 window.POSTS = [
   {
     "id": "thu-tu-thuc-thi-cua-sql",
-    "title": "SQL chạy theo thứ tự nào (không phải thứ tự bạn viết)",
+    "title": "SQL chạy theo thứ tự nào",
     "date": "2026-08-01",
     "category": "Code",
     "topic": "Database & SQL",
