@@ -373,7 +373,7 @@ const SITE = {
   origin: "https://tung1099.github.io/",
   /* Mã site GoatCounter — phần đứng trước ".goatcounter.com" khi bạn đăng ký.
      Để trống thì không nạp script và không đếm gì cả. */
-  goatcounter: "",
+  goatcounter: "tung1099",
   name: "Blog cá nhân",
   kicker: "// ghi lại trước khi quên",
   title: "Kiến thức code và vài chuyện đời thường",
@@ -437,7 +437,7 @@ function setMeta(title, desc){
    CÁC MÀN HÌNH
    ============================================================= */
 const app = document.getElementById('app');
-let q = '', activeTag = '', activeTopic = '';
+let q = '', activeTag = '', activeTopic = '', activeCategory = '';
 
 function badges(p){
   /* bài chưa gắn chủ đề (ví dụ mục Cuộc sống) thì hiện chuyên mục thay vào */
@@ -494,7 +494,10 @@ function viewList(category){
     + '</div>'
     + (list.length
         ? '<div class="plist">'+list.map(cardHTML).join('')+'</div>'
-        : '<div class="empty">Chưa có bài nào khớp.<br>Thử bỏ bớt bộ lọc hoặc từ khoá.</div>');
+        : '<div class="empty">Chưa có bài nào khớp.<br>Thử bỏ bớt bộ lọc hoặc từ khoá.'
+          + ((kw || activeTag || activeTopic)
+              ? '<br><br><button class="chip" onclick="clearFilters()">Bỏ hết bộ lọc</button>' : '')
+          + '</div>');
 
   const inp = document.getElementById('q');
   inp.oninput = e => {
@@ -647,9 +650,21 @@ function nav(route){
 }
 function setTag(t){ activeTag = t; route(); }
 function setTopic(t){ activeTopic = t; route(); }
+function clearFilters(){ q = ''; activeTag = ''; activeTopic = ''; route(); }
 
-/* mở danh sách đã lọc sẵn từ trang bài viết */
-function goTopic(t){ activeTopic = t; activeTag = ''; nav(''); }
+/* mở danh sách đã lọc sẵn từ trang bài viết. Đặt activeCategory trước khi
+   chuyển trang để setCategory() bên dưới không xoá mất chủ đề vừa chọn. */
+function goTopic(t){ activeCategory = ''; q = ''; activeTag = ''; activeTopic = t; nav(''); }
+
+/* Bộ lọc chỉ có nghĩa trong phạm vi một chuyên mục: thẻ #Java lọc ở trang chủ
+   mà còn dính khi sang Cuộc sống thì cho ra danh sách rỗng, lại không có chip
+   nào sáng lên để người đọc biết đường gỡ. Nên đổi chuyên mục là gỡ hết.
+   Xem bài rồi quay lại đúng chuyên mục cũ thì bộ lọc vẫn được giữ. */
+function setCategory(c){
+  if(c === activeCategory) return;
+  activeCategory = c;
+  q = ''; activeTag = ''; activeTopic = '';
+}
 
 /* Đường dẫn chỉ dùng chữ Latin không dấu. Chuyên mục mới chưa khai ở đây thì
    tự sinh slug từ tên, nên thêm chuyên mục không bắt buộc phải sửa chỗ này. */
@@ -678,9 +693,9 @@ function route(){
   document.querySelectorAll('.nb[data-r]').forEach(b => b.classList.toggle('on', b.dataset.r === h));
 
   if(h.startsWith('post/'))          viewPost(h.slice(5));
-  else if(h.startsWith('category/')) viewList(catFromSlug(h.slice(9)));
+  else if(h.startsWith('category/')){ const c = catFromSlug(h.slice(9)); setCategory(c); viewList(c); }
   else if(h === 'about')             viewAbout();
-  else                               viewList('');
+  else                             { setCategory(''); viewList(''); }
 
   countView('/' + h);   /* sau khi render, để document.title đã đúng */
 }
