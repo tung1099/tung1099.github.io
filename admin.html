@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Quản trị — Blog cá nhân</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23b45309'/><text x='16' y='24' font-size='21' font-family='Georgia,serif' fill='%23fdfcfa' text-anchor='middle'>B</text></svg>">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23b45309'/%3E%3Ctext x='16' y='24' font-size='21' font-family='Georgia,serif' fill='%23fdfcfa' text-anchor='middle'%3EB%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -482,11 +482,11 @@ function viewList(){
       ? '<div class="tbl"><div class="tr h"><div>Tiêu đề</div><div>Chuyên mục</div><div>Ngày</div><div></div></div>'
         + list.map(p =>
             '<div class="tr">'
-            + '<div><div class="ti">' + esc2(p.title) + '</div><div class="sl">/#/bai/' + esc2(p.id) + '</div></div>'
+            + '<div><div class="ti">' + esc2(p.title) + '</div><div class="sl">/#/post/' + esc2(p.id) + '</div></div>'
             + '<div><span class="cat">' + esc2(p.topic || p.category || '—') + '</span></div>'
             + '<div class="dt">' + esc2(p.date || '') + '</div>'
             + '<div class="acts">'
-              + '<button class="btn sm" onclick="window.open(\'index.html#/bai/' + esc2(p.id) + '\',\'_blank\')">Xem</button>'
+              + '<button class="btn sm" onclick="window.open(\'index.html#/post/' + esc2(p.id) + '\',\'_blank\')">Xem</button>'
               + '<button class="btn sm" onclick="editPost(\'' + esc2(p.id) + '\')">Sửa</button>'
               + '<button class="btn sm dan" onclick="removePost(\'' + esc2(p.id) + '\')">Xoá</button>'
             + '</div></div>').join('')
@@ -551,7 +551,7 @@ function renderEditor(){
 
     + '<div class="row c3">'
       + '<div class="f"><label>Đường dẫn (slug)</label><input class="inp" id="f-id" value="' + esc2(e.id) + '" placeholder="tu-dong-tao-tu-tieu-de">'
-        + '<div class="hint">Link bài: <code>/#/bai/<span id="slugPrev">' + esc2(e.id) + '</span></code></div></div>'
+        + '<div class="hint">Link bài: <code>/#/post/<span id="slugPrev">' + esc2(e.id) + '</span></code></div></div>'
       + '<div class="f"><label>Chuyên mục</label><select class="inp" id="f-cat">' + catOpts + '</select></div>'
       + '<div class="f"><label>Ngày đăng</label><input class="inp" id="f-date" type="date" value="' + esc2(e.date) + '"></div>'
     + '</div>'

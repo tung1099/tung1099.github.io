@@ -12,7 +12,7 @@
 <meta property="og:url" content="https://tung1099.github.io/">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://tung1099.github.io/">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23b45309'/><text x='16' y='24' font-size='21' font-family='Georgia,serif' fill='%23fdfcfa' text-anchor='middle'>B</text></svg>">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23b45309'/%3E%3Ctext x='16' y='24' font-size='21' font-family='Georgia,serif' fill='%23fdfcfa' text-anchor='middle'%3EB%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -339,9 +339,9 @@ footer a:hover{color:var(--accent)}
     <a class="logo" href="#/" onclick="nav('')">Blog <span class="b">cá nhân</span></a>
     <nav>
       <button class="nb" data-r="" onclick="nav('')">Tất cả</button>
-      <button class="nb" data-r="chuyen-muc/Code" onclick="nav('chuyen-muc/Code')">Code</button>
-      <button class="nb" data-r="chuyen-muc/Cuộc sống" onclick="nav('chuyen-muc/Cuộc sống')">Cuộc sống</button>
-      <button class="nb" data-r="gioi-thieu" onclick="nav('gioi-thieu')">Giới thiệu</button>
+      <button class="nb" data-r="category/code" onclick="nav('category/code')">Code</button>
+      <button class="nb" data-r="category/life" onclick="nav('category/life')">Cuộc sống</button>
+      <button class="nb" data-r="about" onclick="nav('about')">Giới thiệu</button>
       <button class="ib" id="themeBtn" onclick="toggleTheme()" title="Sáng / tối"></button>
     </nav>
   </div>
@@ -427,7 +427,7 @@ function badges(p){
 }
 
 function cardHTML(p){
-  return '<div class="pcard" onclick="nav(\'bai/'+p.id+'\')">'
+  return '<div class="pcard" onclick="nav(\'post/'+p.id+'\')">'
     + '<div class="pmeta">'+badges(p)+'<span class="dot">·</span>'
     + '<span>'+fmtDate(p.date)+'</span><span class="dot">·</span><span>'+readTime(p.body)+'</span></div>'
     + '<h2>'+esc(p.title)+'</h2>'
@@ -512,7 +512,7 @@ function sameTopicBox(p, all){
   const shown = items.slice(0, 8);
   return '<div class="same">'
     + '<div class="t">Cùng chủ đề ' + esc(p.topic) + '</div><ul>'
-    + shown.map(it => '<li onclick="nav(\'bai/'+it.id+'\')">'+esc(it.title)+'</li>').join('')
+    + shown.map(it => '<li onclick="nav(\'post/'+it.id+'\')">'+esc(it.title)+'</li>').join('')
     + '</ul>'
     + (items.length > shown.length
         ? '<div class="more" onclick="goTopic(\''+p.topic.replace(/'/g,"\\'")+'\')">Xem tất cả bài chủ đề này →</div>' : '')
@@ -541,7 +541,7 @@ function viewPost(id){
       + '<div class="pmeta">'
       + (p.topic
           ? '<span class="topic" style="cursor:pointer" onclick="goTopic(\''+p.topic.replace(/'/g,"\\'")+'\')"><b>'+esc(p.topic)+'</b></span>'
-          : '<span class="cat" style="cursor:pointer" onclick="nav(\'chuyen-muc/'+esc(p.category||'')+'\')">'+esc(p.category||'')+'</span>')
+          : '<span class="cat" style="cursor:pointer" onclick="nav(\'category/'+catSlug(p.category)+'\')">'+esc(p.category||'')+'</span>')
       + '<span class="dot">·</span>'
       + '<span>'+fmtDate(p.date)+'</span><span class="dot">·</span><span>'+readTime(p.body)+'</span></div>'
       + '<h1>'+esc(p.title)+'</h1>'
@@ -557,8 +557,8 @@ function viewPost(id){
         + '<button class="sbtn" onclick="window.open(\'https://twitter.com/intent/tweet?url=\'+encodeURIComponent(location.href)+\'&text=\'+encodeURIComponent(document.title),\'_blank\')">X</button>'
       + '</div>'
       + '<div class="nextprev">'
-        + (older ? '<div class="np" onclick="nav(\'bai/'+older.id+'\')"><div class="lbl">← Bài cũ hơn</div><div class="t">'+esc(older.title)+'</div></div>' : '<div></div>')
-        + (newer ? '<div class="np r" onclick="nav(\'bai/'+newer.id+'\')"><div class="lbl">Bài mới hơn →</div><div class="t">'+esc(newer.title)+'</div></div>' : '<div></div>')
+        + (older ? '<div class="np" onclick="nav(\'post/'+older.id+'\')"><div class="lbl">← Bài cũ hơn</div><div class="t">'+esc(older.title)+'</div></div>' : '<div></div>')
+        + (newer ? '<div class="np r" onclick="nav(\'post/'+newer.id+'\')"><div class="lbl">Bài mới hơn →</div><div class="t">'+esc(newer.title)+'</div></div>' : '<div></div>')
       + '</div>'
     + '</div>';
 
@@ -597,14 +597,36 @@ function setTopic(t){ activeTopic = t; route(); }
 /* mở danh sách đã lọc sẵn từ trang bài viết */
 function goTopic(t){ activeTopic = t; activeTag = ''; nav(''); }
 
+/* Đường dẫn chỉ dùng chữ Latin không dấu. Chuyên mục mới chưa khai ở đây thì
+   tự sinh slug từ tên, nên thêm chuyên mục không bắt buộc phải sửa chỗ này. */
+const CAT_SLUG = { 'Code': 'code', 'Cuộc sống': 'life' };
+const catSlug  = c => CAT_SLUG[c] || slugify(c || '');
+const catNames = () => [...new Set(posts().map(p => p.category).filter(Boolean))];
+const catFromSlug = s => catNames().find(c => catSlug(c) === s) || '';
+
+/* Định dạng đường dẫn cũ (#/bai/…, #/chuyen-muc/…, #/gioi-thieu, #/lo-trinh):
+   trả về đường dẫn mới tương ứng, hoặc null nếu đã là định dạng mới. */
+function legacyRoute(h){
+  if(h.startsWith('bai/'))        return 'post/' + h.slice(4);
+  if(h.startsWith('chuyen-muc/')) return 'category/' + catSlug(h.slice(11));
+  if(h === 'gioi-thieu')          return 'about';
+  if(h === 'lo-trinh')            return '';
+  return null;
+}
+
 function route(){
   const h = decodeURIComponent(location.hash.replace(/^#\/?/, ''));
+
+  /* link cũ đã chia sẻ vẫn mở đúng chỗ — đổi hash rồi để hashchange chạy lại */
+  const moved = legacyRoute(h);
+  if(moved !== null){ location.replace('#/' + moved); return; }
+
   document.querySelectorAll('.nb[data-r]').forEach(b => b.classList.toggle('on', b.dataset.r === h));
 
-  if(h.startsWith('bai/'))             viewPost(h.slice(4));
-  else if(h.startsWith('chuyen-muc/')) viewList(h.slice(11));
-  else if(h === 'gioi-thieu')          viewAbout();
-  else                                 viewList('');
+  if(h.startsWith('post/'))          viewPost(h.slice(5));
+  else if(h.startsWith('category/')) viewList(catFromSlug(h.slice(9)));
+  else if(h === 'about')             viewAbout();
+  else                               viewList('');
 }
 
 /* =============================================================
