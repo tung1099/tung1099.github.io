@@ -125,7 +125,6 @@ label{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-b
 .tr .ti{font-family:var(--f-serif);font-weight:600;font-size:16px;line-height:1.4}
 .tr .sl{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);margin-top:3px}
 .tr .cat{font-size:11.5px;font-weight:600;color:var(--accent);background:var(--accent-bg);padding:2px 10px;border-radius:20px;display:inline-block}
-.tr .lvl{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);border:1px solid var(--line);padding:1px 7px;border-radius:20px;display:inline-block;margin-top:4px}
 .tr .dt{font-family:var(--f-mono);font-size:12.5px;color:var(--muted)}
 .acts{display:flex;gap:6px;justify-content:flex-end}
 .empty{padding:56px 20px;text-align:center;color:var(--muted);font-size:14px}
@@ -484,8 +483,7 @@ function viewList(){
         + list.map(p =>
             '<div class="tr">'
             + '<div><div class="ti">' + esc2(p.title) + '</div><div class="sl">/#/bai/' + esc2(p.id) + '</div></div>'
-            + '<div><span class="cat">' + esc2(p.topic || p.category || '—') + '</span>'
-              + (p.level ? '<span class="lvl">' + esc2(p.level) + '</span>' : '') + '</div>'
+            + '<div><span class="cat">' + esc2(p.topic || p.category || '—') + '</span></div>'
             + '<div class="dt">' + esc2(p.date || '') + '</div>'
             + '<div class="acts">'
               + '<button class="btn sm" onclick="window.open(\'index.html#/bai/' + esc2(p.id) + '\',\'_blank\')">Xem</button>'
@@ -517,8 +515,7 @@ async function removePost(id){
 
 /* ============================ SOẠN THẢO ============================ */
 const CATS   = ['Code', 'Cuộc sống'];
-const LEVELS = ['Fresher', 'Junior', 'Middle'];
-const TOPICS = ['Java core', 'Spring', 'Database & SQL', 'Kafka', 'Redis',
+const TOPICS = ['Java core', 'Spring', 'Database & SQL', 'Kafka', 'Redis', 'Bảo mật',
                 'Docker & CI/CD', 'Mạng máy tính', 'Hiệu năng', 'Công cụ', 'AI ứng dụng'];
 
 /* <option> có sẵn giá trị đang dùng kể cả khi nó không nằm trong danh sách */
@@ -532,7 +529,7 @@ function editPost(id){
   const p = id ? S.posts.find(x => x.id === id) : null;
   S.editing = p ? JSON.parse(JSON.stringify(p)) : {
     id: '', title: '', date: new Date().toISOString().slice(0,10),
-    category: 'Code', level: '', topic: '', tags: [], summary: '', body: ''
+    category: 'Code', topic: '', tags: [], summary: '', body: ''
   };
   S.editing._orig = id || null;
   S.dirty = false;
@@ -559,12 +556,8 @@ function renderEditor(){
       + '<div class="f"><label>Ngày đăng</label><input class="inp" id="f-date" type="date" value="' + esc2(e.date) + '"></div>'
     + '</div>'
 
-    + '<div class="row c2">'
-      + '<div class="f"><label>Mức</label><select class="inp" id="f-level">' + opts(LEVELS, e.level || '', 'không gắn mức') + '</select>'
-        + '<div class="hint">Bài kiến thức thì chọn mức để nó hiện trên trang <b>Lộ trình</b>. Bài đời thường thì để trống.</div></div>'
-      + '<div class="f"><label>Chủ đề</label><select class="inp" id="f-topic">' + opts(TOPICS, e.topic || '', 'không gắn chủ đề') + '</select>'
-        + '<div class="hint">Quyết định bài nằm ở nhóm nào và mục &quot;Bài khác trong…&quot; cuối bài.</div></div>'
-    + '</div>'
+    + '<div class="f"><label>Chủ đề</label><select class="inp" id="f-topic">' + opts(TOPICS, e.topic || '', 'không gắn chủ đề') + '</select>'
+      + '<div class="hint">Hiện làm huy hiệu của bài, làm bộ lọc ở trang danh sách, và dựng mục &quot;Cùng chủ đề&quot; cuối bài. Bài đời thường thì để trống.</div></div>'
 
     + '<div class="f"><label>Thẻ (cách nhau bằng dấu phẩy)</label>'
       + '<input class="inp" id="f-tags" value="' + esc2((e.tags || []).join(', ')) + '" placeholder="Java, Spring, AI"></div>'
@@ -604,7 +597,7 @@ function renderEditor(){
   const mark = () => { S.dirty = true; setStatus('', 'Có thay đổi chưa đăng'); };
 
   ta.addEventListener('input', () => { renderPreview(); mark(); });
-  ['f-title','f-id','f-cat','f-date','f-tags','f-sum','f-level','f-topic'].forEach(k => $(k).addEventListener('input', mark));
+  ['f-title','f-id','f-cat','f-date','f-tags','f-sum','f-topic'].forEach(k => $(k).addEventListener('input', mark));
 
   title.addEventListener('input', () => {
     if(!e._orig && !idf._touched){
@@ -800,7 +793,6 @@ function savePost(){
     category: $('f-cat').value
   };
   /* để trống thì không ghi field vào file cho gọn */
-  if($('f-level').value) post.level = $('f-level').value;
   if($('f-topic').value) post.topic = $('f-topic').value;
   post.tags    = $('f-tags').value.split(',').map(t => t.trim()).filter(Boolean);
   post.summary = $('f-sum').value.trim();

@@ -4,7 +4,6 @@ window.POSTS = [
     "title": "SQL chạy theo thứ tự nào (không phải thứ tự bạn viết)",
     "date": "2026-08-01",
     "category": "Code",
-    "level": "Fresher",
     "topic": "Database & SQL",
     "tags": [
       "SQL",
@@ -18,7 +17,6 @@ window.POSTS = [
     "title": "Access token và refresh token: vì sao phải có hai cái",
     "date": "2026-08-01",
     "category": "Code",
-    "level": "Junior",
     "topic": "Bảo mật",
     "tags": [
       "Bảo mật",
@@ -33,7 +31,6 @@ window.POSTS = [
     "title": "@Component, @Service, @Repository khác nhau chỗ nào?",
     "date": "2026-07-31",
     "category": "Code",
-    "level": "Junior",
     "topic": "Spring",
     "tags": [
       "Java",
@@ -47,7 +44,6 @@ window.POSTS = [
     "title": "RAG giải thích cho người viết Java",
     "date": "2026-07-28",
     "category": "Code",
-    "level": "Middle",
     "topic": "AI ứng dụng",
     "tags": [
       "AI",
@@ -62,7 +58,6 @@ window.POSTS = [
     "title": "Pub/Sub: vì sao Order Service không nên gọi thẳng Email Service",
     "date": "2026-07-26",
     "category": "Code",
-    "level": "Junior",
     "topic": "Kafka",
     "tags": [
       "Kafka",
@@ -89,7 +84,6 @@ window.POSTS = [
     "title": "HashMap chạy thế nào bên trong",
     "date": "2026-07-24",
     "category": "Code",
-    "level": "Fresher",
     "topic": "Java core",
     "tags": [
       "Java",
@@ -103,7 +97,6 @@ window.POSTS = [
     "title": "Một request HTTP đi qua những đâu",
     "date": "2026-07-22",
     "category": "Code",
-    "level": "Fresher",
     "topic": "Mạng máy tính",
     "tags": [
       "Mạng",
@@ -117,7 +110,6 @@ window.POSTS = [
     "title": "Đã tạo index rồi mà query vẫn chậm",
     "date": "2026-07-20",
     "category": "Code",
-    "level": "Junior",
     "topic": "Database & SQL",
     "tags": [
       "SQL",
@@ -132,7 +124,6 @@ window.POSTS = [
     "title": "Cache-aside với Redis và ba cái bẫy",
     "date": "2026-07-18",
     "category": "Code",
-    "level": "Junior",
     "topic": "Redis",
     "tags": [
       "Redis",
@@ -147,7 +138,6 @@ window.POSTS = [
     "title": "Multi-stage build và thứ tự layer trong Dockerfile",
     "date": "2026-07-16",
     "category": "Code",
-    "level": "Junior",
     "topic": "Docker & CI/CD",
     "tags": [
       "Docker",
@@ -162,7 +152,6 @@ window.POSTS = [
     "title": "Kafka: consumer group, rebalance và message bị xử lý hai lần",
     "date": "2026-07-14",
     "category": "Code",
-    "level": "Middle",
     "topic": "Kafka",
     "tags": [
       "Kafka",
@@ -177,7 +166,6 @@ window.POSTS = [
     "title": "Đo hiệu năng: p99 chứ không phải trung bình",
     "date": "2026-07-12",
     "category": "Code",
-    "level": "Middle",
     "topic": "Hiệu năng",
     "tags": [
       "Hiệu năng",
